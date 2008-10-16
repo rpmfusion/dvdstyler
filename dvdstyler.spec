@@ -1,39 +1,48 @@
 Name:           dvdstyler
-Version:        1.5.1
+Version:        1.7.0
 Release:        3%{?dist}
-Epoch:          1
-Summary:        Cross-platform DVD authoring system
+Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
-License:        GPL+
+License:        GPLv2+
 URL:            http://www.dvdstyler.de/
-Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.gz
-Patch0:         %{name}-1.5.1-desktop.patch
+Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
+Patch0:         dvdstyler-1.6.2-desktop.patch
+Patch1:         dvdstyler-1.7.0-wxsvg-freeworld.patch
+Patch2:         dvdstyler-1.7.0-ffmpeg-AVCodecTag.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-BuildRequires:  wxGTK-devel >= 2.6.3
-BuildRequires:  wxsvg-devel
+# build
 BuildRequires:  gettext
+BuildRequires:  automake
+BuildRequires:  autoconf
+# libraries
+BuildRequires:  wxGTK-devel >= 2.6.3
+BuildRequires:  wxsvg-freeworld-devel
+BuildRequires:  ffmpeg-devel
+BuildRequires:  libgnomeui-devel
+# mpeg
 BuildRequires:  mpgtx
-BuildRequires:  netpbm-progs
 BuildRequires:  mjpegtools
 BuildRequires:  dvdauthor
+# iso/burn
 BuildRequires:  mkisofs
 BuildRequires:  dvd+rw-tools
-BuildRequires:  libgnomeui-devel
+#images
 BuildRequires:  libjpeg-devel
+BuildRequires:  libexif-devel
+BuildRequires:  netpbm-progs
+# finally
 BuildRequires:  desktop-file-utils
+
 Requires:       mpgtx
 Requires:       netpbm-progs
 Requires:       mjpegtools
 Requires:       dvdauthor
 Requires:       mkisofs
 Requires:       dvd+rw-tools
+
 # Optional, defaults to off in burn settings in 1.5.1
 Requires(hint): dvdisaster
-# This is not strictly true, but it's the default previewer, and mplayer
-# doesn't support DVD menus, so...
-Requires:       xine
 
 %description
 DVDStyler is a cross-platform DVD menu creation GUI that allows
@@ -44,19 +53,23 @@ rendering programs to produce the final DVD menu navigation system.
 
 %prep
 %setup -q -n DVDStyler-%{version}
-%patch0 -p1
-# Q'n'd fix for configure/Makefile.in outdatedness in 1.5.1:
-(echo all: ; echo install:) > install.win32/Makefile.in
-
+%patch0 -b .desktop
+%patch1 -b .wxsvg-freeworld
+%patch2 -b .ffmpeg-AVCodecTag
 
 %build
-%configure --disable-dependency-tracking
+export CFLAGS="$CXXFLAGS -I/usr/include/wxSVG-freeworld -L%{_libdir}/wxsvg-freeworld"
+export CXXFLAGS="$CXXFLAGS -I/usr/include/wxSVG-freeworld -L%{_libdir}/wxsvg-freeworld"
+./autogen.sh
+%configure \
+  --disable-dependency-tracking
 make %{?_smp_mflags}
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/dvdstyler
 # Desktop entry and icon are supposed to be installed by "make install"
 # in 1.5.1 (to paths we don't want) but are not due to configure/Makefile.in
@@ -66,6 +79,7 @@ desktop-file-install --vendor livna --mode 644 \
   data/dvdstyler.desktop
 install -Dpm 644 data/dvdstyler.png \
   $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/dvdstyler.png
+
 %find_lang %{name}
 
 
@@ -93,9 +107,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dvdstyler/
 %{_datadir}/applications/*dvdstyler.desktop
 %{_datadir}/icons/hicolor/*x*/apps/dvdstyler.png
-
+%{_datadir}/pixmaps/dvdstyler.png
+%{_mandir}/*/*.gz
 
 %changelog
+* Wed Oct 15 2008 Stewart Adam <s.adam at diffingo.com> - 1.7.0-3
+- Add ffmpeg-devel and fix wxsvg-freeworld-devel BR
+- Add patch to fix AVCodecTag conversion errors
+- Update wxsvg-freeworld patch so dvdstyler can be built without wxsvg (and use
+  only wxsvg-freeworld instead)
+
+* Sat Sep 27 2008 Stewart Adam <s.adam at diffingo.com> - 1.7.0-2
+- Rebuild for wxsvg 1.0b11 with ffmpeg enabled
+
+* Sat Sep 06 2008 Stewart Adam <s.adam at diffingo.com> - 1:1.7.0-1
+- Update to 1.7.0
+
+* Sat Aug 16 2008 Stewart Adam <s.adam at diffingo.com> - 1:1.6.2-1
+- Update to 1.6.2
+
 * Sun Aug 03 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info - 1:1.5.1-3
 - rebuild
 

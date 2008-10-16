@@ -1,0 +1,17 @@
+--- data/dvdstyler.desktop.old	2008-08-16 11:59:51.000000000 -0400
++++ data/dvdstyler.desktop	2008-08-16 11:59:20.000000000 -0400
+@@ -1,11 +1,11 @@
+ [Desktop Entry]
+ Version=1.0
+ Type=Application
+-Encoding=UTF-8
+ Name=DVD Styler
+ Comment=Video DVD Production
++Icon=dvdstyler
+-Icon=dvdstyler.png
+ Exec=dvdstyler
+ Terminal=false
++Categories=AudioVideo;
+-Categories=Application;AudioVideo;
+ StartupNotify=true
++StartupWMClass=Dvdstyler
