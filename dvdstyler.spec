@@ -1,6 +1,7 @@
 Name:           dvdstyler
-Version:        1.7.0
-Release:        3%{?dist}
+Epoch:          1
+Version:        1.7.1
+Release:        1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -8,8 +9,6 @@ License:        GPLv2+
 URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 Patch0:         dvdstyler-1.6.2-desktop.patch
-Patch1:         dvdstyler-1.7.0-wxsvg-freeworld.patch
-Patch2:         dvdstyler-1.7.0-ffmpeg-AVCodecTag.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # build
 BuildRequires:  gettext
@@ -17,7 +16,7 @@ BuildRequires:  automake
 BuildRequires:  autoconf
 # libraries
 BuildRequires:  wxGTK-devel >= 2.6.3
-BuildRequires:  wxsvg-freeworld-devel
+BuildRequires:  wxsvg-devel >= 1.0
 BuildRequires:  ffmpeg-devel
 BuildRequires:  libgnomeui-devel
 # mpeg
@@ -40,7 +39,7 @@ Requires:       mjpegtools
 Requires:       dvdauthor
 Requires:       mkisofs
 Requires:       dvd+rw-tools
-
+Requires:       wxsvg-freeworld >= 1.0  
 # Optional, defaults to off in burn settings in 1.5.1
 Requires(hint): dvdisaster
 
@@ -54,12 +53,11 @@ rendering programs to produce the final DVD menu navigation system.
 %prep
 %setup -q -n DVDStyler-%{version}
 %patch0 -b .desktop
-%patch1 -b .wxsvg-freeworld
-%patch2 -b .ffmpeg-AVCodecTag
 
 %build
-export CFLAGS="$CXXFLAGS -I/usr/include/wxSVG-freeworld -L%{_libdir}/wxsvg-freeworld"
-export CXXFLAGS="$CXXFLAGS -I/usr/include/wxSVG-freeworld -L%{_libdir}/wxsvg-freeworld"
+# some sed magic so we find wxsvg-freeworld properly
+%{__sed} -i 's|LIBS="$LIBS $WX_LIBS "|LIBS="$LIBS $WX_LIBS -L%{_libdir}/wxsvg-freeworld "|g' configure.in
+%{__sed} -i 's|LDADD = ../wxVillaLib/libwxvilla.a|LDADD = ../wxVillaLib/libwxvilla.a -L%{_libdir}/wxsvg-freeworld|g' src/Makefile.am
 ./autogen.sh
 %configure \
   --disable-dependency-tracking
@@ -111,6 +109,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Thu Nov 13 2008 Stewart Adam <s.adam at diffingo.com> - 1.7.1-1
+- Update to 1.7.1
+- Remove AVCodecTag patch
+- Add wxsvg-freeworld to the linker paths
+
 * Wed Oct 15 2008 Stewart Adam <s.adam at diffingo.com> - 1.7.0-3
 - Add ffmpeg-devel and fix wxsvg-freeworld-devel BR
 - Add patch to fix AVCodecTag conversion errors
