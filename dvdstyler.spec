@@ -1,7 +1,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        1.7.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -9,11 +9,10 @@ License:        GPLv2+
 URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 Patch0:         dvdstyler-1.6.2-desktop.patch
+Patch1:         dvdstyler-1.7.1-wxsvg_freeworld.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # build
-BuildRequires:  gettext
-BuildRequires:  automake
-BuildRequires:  autoconf
+BuildRequires:  automake, autoconf, gettext
 # libraries
 BuildRequires:  wxGTK-devel >= 2.6.3
 BuildRequires:  wxsvg-devel >= 1.0
@@ -33,15 +32,17 @@ BuildRequires:  netpbm-progs
 # finally
 BuildRequires:  desktop-file-utils
 
+Requires:       dvd+rw-tools
+Requires:       dvdauthor
+Requires:       mjpegtools
+Requires:       mkisofs
 Requires:       mpgtx
 Requires:       netpbm-progs
-Requires:       mjpegtools
-Requires:       dvdauthor
-Requires:       mkisofs
-Requires:       dvd+rw-tools
-Requires:       wxsvg-freeworld >= 1.0  
+Requires:       wxsvg-freeworld >= 1.0
+# Don't care what backend, but we need one to preview DVDs.
+Requires:       totem-backend
 # Optional, defaults to off in burn settings in 1.5.1
-Requires(hint): dvdisaster
+#Requires(hint): dvdisaster
 
 %description
 DVDStyler is a cross-platform DVD menu creation GUI that allows
@@ -53,11 +54,10 @@ rendering programs to produce the final DVD menu navigation system.
 %prep
 %setup -q -n DVDStyler-%{version}
 %patch0 -b .desktop
+%patch1 -b .wxsvg_freeworld
+%{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
-# some sed magic so we find wxsvg-freeworld properly
-%{__sed} -i 's|LIBS="$LIBS $WX_LIBS "|LIBS="$LIBS $WX_LIBS -L%{_libdir}/wxsvg-freeworld "|g' configure.in
-%{__sed} -i 's|LDADD = ../wxVillaLib/libwxvilla.a|LDADD = ../wxVillaLib/libwxvilla.a -L%{_libdir}/wxsvg-freeworld|g' src/Makefile.am
 ./autogen.sh
 %configure \
   --disable-dependency-tracking
@@ -109,18 +109,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
-* Thu Nov 13 2008 Stewart Adam <s.adam at diffingo.com> - 1.7.1-1
+* Thu Dec 11 2008 Stewart Adam <s.adam at diffingo.com> - 1:1.7.1-2
+- Remove previous link hacks and link against wxsvg_freeworld
+- Use totem to preview DVDs
+- Don't require dvdisaster; it's optional
+- Fix changelog dates wrt epoch
+
+* Thu Nov 13 2008 Stewart Adam <s.adam at diffingo.com> - 1:1.7.1-1
 - Update to 1.7.1
 - Remove AVCodecTag patch
 - Add wxsvg-freeworld to the linker paths
 
-* Wed Oct 15 2008 Stewart Adam <s.adam at diffingo.com> - 1.7.0-3
+* Wed Oct 15 2008 Stewart Adam <s.adam at diffingo.com> - 1:1.7.0-3
 - Add ffmpeg-devel and fix wxsvg-freeworld-devel BR
 - Add patch to fix AVCodecTag conversion errors
 - Update wxsvg-freeworld patch so dvdstyler can be built without wxsvg (and use
   only wxsvg-freeworld instead)
 
-* Sat Sep 27 2008 Stewart Adam <s.adam at diffingo.com> - 1.7.0-2
+* Sat Sep 27 2008 Stewart Adam <s.adam at diffingo.com> - 1:1.7.0-2
 - Rebuild for wxsvg 1.0b11 with ffmpeg enabled
 
 * Sat Sep 06 2008 Stewart Adam <s.adam at diffingo.com> - 1:1.7.0-1

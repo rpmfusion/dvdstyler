@@ -1,0 +1,12 @@
+--- configure.in.orig	2008-11-14 11:20:25.000000000 -0500
++++ configure.in	2008-12-11 14:11:19.000000000 -0500
+@@ -57,7 +57,7 @@
+ LIBS="$LIBS $WX_LIBS "
+ 
+ dnl check for wxSVG
+-AC_CHECK_LIB(wxsvg, main, [LIBS="$LIBS -lwxsvg"], [AC_MSG_ERROR([*** missing wxSVG library (wxsvg.sf.net) ***])])
++AC_CHECK_LIB(wxsvg, main, [LIBS="$LIBS -lwxsvg_freeworld"], [AC_MSG_ERROR([*** missing wxsvg-freeworld library (rpmfusion.org) ***])])
+ AC_CHECK_HEADER([wxSVG/svg.h], [], [AC_MSG_ERROR([*** missing wxSVG library (wxsvg.sf.net) ***])])
+ 
+ dnl check gnomeui-2.0
+
