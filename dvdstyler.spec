@@ -1,21 +1,20 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        1.7.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
-Patch0:         dvdstyler-1.6.2-desktop.patch
-Patch1:         dvdstyler-1.7.1-wxsvg_freeworld.patch
+Patch0:         dvdstyler-make-desktopfile-valid.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # build
 BuildRequires:  automake, autoconf, gettext
 # libraries
 BuildRequires:  wxGTK-devel >= 2.6.3
-BuildRequires:  wxsvg-devel >= 1.0
+BuildRequires:  wxsvg-devel >= 1.0-6
 BuildRequires:  ffmpeg-devel
 BuildRequires:  libgnomeui-devel
 # mpeg
@@ -38,23 +37,19 @@ Requires:       mjpegtools
 Requires:       mkisofs
 Requires:       mpgtx
 Requires:       netpbm-progs
-Requires:       wxsvg-freeworld >= 1.0
+Requires:       wxsvg >= 1.0-6
 # Don't care what backend, but we need one to preview DVDs.
 Requires:       totem-backend
-# Optional, defaults to off in burn settings in 1.5.1
-#Requires(hint): dvdisaster
 
 %description
-DVDStyler is a cross-platform DVD menu creation GUI that allows
-creation of DVD navigation menus similar to those found on most
-commercial DVD's.  It leverages various other open source video
-rendering programs to produce the final DVD menu navigation system.
+DVDStyler is a cross-platform DVD authoring application that makes possible for
+video enthusiasts to create professional-looking DVDs. It allows users to
+create navigational DVD menus similar to those found on most commercial DVDs.
 
 
 %prep
 %setup -q -n DVDStyler-%{version}
-%patch0 -b .desktop
-%patch1 -b .wxsvg_freeworld
+%patch0 -b .validdesktop
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
@@ -69,29 +64,13 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/dvdstyler
-# Desktop entry and icon are supposed to be installed by "make install"
-# in 1.5.1 (to paths we don't want) but are not due to configure/Makefile.in
-# and friends outdatedness, watch this space in > 1.5.1.
-desktop-file-install --vendor livna --mode 644 \
+
+desktop-file-install --vendor rpmfusion \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications \
-  data/dvdstyler.desktop
-install -Dpm 644 data/dvdstyler.png \
-  $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/dvdstyler.png
+  --delete-original \
+  $RPM_BUILD_ROOT%{_datadir}/applications/%{name}.desktop
 
 %find_lang %{name}
-
-
-%post
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ] ; then
-  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
-
-%postun
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ] ; then
-  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
 
 
 %clean
@@ -101,14 +80,19 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING README TODO
-%{_bindir}/dvdstyler
-%{_datadir}/dvdstyler/
-%{_datadir}/applications/*dvdstyler.desktop
-%{_datadir}/icons/hicolor/*x*/apps/dvdstyler.png
-%{_datadir}/pixmaps/dvdstyler.png
+%{_bindir}/%{name}
+%{_datadir}/%{name}/
+%{_datadir}/applications/*%{name}.desktop
+%{_datadir}/pixmaps/%{name}.png
 %{_mandir}/*/*.gz
 
 %changelog
+* Sat Jan 24 2009 Stewart Adam <s.adam at diffingo.com> - 1:1.7.1-4
+- Remove wxsvg_freeworld patch
+- desktop and icon files now install correctly, don't install them manually
+- Remove hicolor scriptlets
+- Update %%description
+
 * Thu Dec 11 2008 Stewart Adam <s.adam at diffingo.com> - 1:1.7.1-2
 - Remove previous link hacks and link against wxsvg_freeworld
 - Use totem to preview DVDs
