@@ -1,7 +1,7 @@
 Name:           dvdstyler
 Epoch:          1
-Version:        1.7.1
-Release:        4%{?dist}
+Version:        1.7.2
+Release:        1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -17,6 +17,7 @@ BuildRequires:  wxGTK-devel >= 2.6.3
 BuildRequires:  wxsvg-devel >= 1.0-6
 BuildRequires:  ffmpeg-devel
 BuildRequires:  libgnomeui-devel
+BuildRequires:  zip
 # mpeg
 BuildRequires:  mpgtx
 BuildRequires:  mjpegtools
@@ -30,6 +31,7 @@ BuildRequires:  libexif-devel
 BuildRequires:  netpbm-progs
 # finally
 BuildRequires:  desktop-file-utils
+BuildRequires:  xmlto
 
 Requires:       dvd+rw-tools
 Requires:       dvdauthor
@@ -38,8 +40,8 @@ Requires:       mkisofs
 Requires:       mpgtx
 Requires:       netpbm-progs
 Requires:       wxsvg >= 1.0-6
-# Don't care what backend, but we need one to preview DVDs.
-Requires:       totem-backend
+# note: do not add Require: totem-backend or another DVD player - see
+# RPM Fusion bug 366 for more details
 
 %description
 DVDStyler is a cross-platform DVD authoring application that makes possible for
@@ -87,6 +89,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Sun Mar 8 2009 Stewart Adam <s.adam at diffingo.com> - 1:1.7.2-1
+- Remove dependency on totem-backend (#366)
+- Update to 1.7.2
+
 * Sat Jan 24 2009 Stewart Adam <s.adam at diffingo.com> - 1:1.7.1-4
 - Remove wxsvg_freeworld patch
 - desktop and icon files now install correctly, don't install them manually
