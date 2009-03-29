@@ -1,7 +1,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        1.7.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Sun Mar 29 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1:1.7.2-2
+- rebuild for new F11 features
+
 * Sun Mar 8 2009 Stewart Adam <s.adam at diffingo.com> - 1:1.7.2-1
 - Remove dependency on totem-backend (#366)
 - Update to 1.7.2
