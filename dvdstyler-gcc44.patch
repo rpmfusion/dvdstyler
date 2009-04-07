@@ -1,0 +1,10 @@
+--- src/mediaenc_ffmpeg.h.orig	2008-12-31 11:02:59.000000000 -0500
++++ src/mediaenc_ffmpeg.h	2009-04-07 14:30:00.000000000 -0400
+@@ -11,6 +11,7 @@
+ #ifndef WX_FFMPEG_MEDIA_ENCODER_H
+ #define WX_FFMPEG_MEDIA_ENCODER_H
+ 
++#include <stdint.h>
+ #include "mediaenc.h"
+ 
+ struct AVFormatContext;
