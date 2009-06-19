@@ -1,13 +1,13 @@
 Name:           dvdstyler
 Epoch:          1
-Version:        1.7.2
-Release:        1%{?dist}
+Version:        1.7.3
+Release:        0.1.beta3%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
-Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
+Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}b3_1.tar.bz2
 Patch0:         dvdstyler-make-desktopfile-valid.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # build
@@ -50,7 +50,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 
 %prep
-%setup -q -n DVDStyler-%{version}
+%setup -q -n DVDStyler-%{version}b3_1
 %patch0 -b .validdesktop
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Fri Jun 19 2009 Stewart Adam <s.adam at diffingo.com> - 1:1.7.3-0.1.beta3
+- Update to 1.7.3 beta3
+
 * Sun Mar 8 2009 Stewart Adam <s.adam at diffingo.com> - 1:1.7.2-1
 - Remove dependency on totem-backend (#366)
 - Update to 1.7.2
