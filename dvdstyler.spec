@@ -1,13 +1,13 @@
 Name:           dvdstyler
 Epoch:          1
-Version:        1.7.3
-Release:        0.1.beta3%{?dist}
+Version:        1.8.0.3
+Release:        1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
-Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}b3_1.tar.bz2
+Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 Patch0:         dvdstyler-make-desktopfile-valid.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # build
@@ -50,14 +50,16 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 
 %prep
-%setup -q -n DVDStyler-%{version}b3_1
+%setup -q -n DVDStyler-%{version}
 %patch0 -b .validdesktop
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
-./autogen.sh
+#./autogen.sh
 %configure \
   --disable-dependency-tracking
+# docs folder is not smp_mflags safe
+make -C docs
 make %{?_smp_mflags}
 
 
@@ -89,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Wed May 19 2010 Stewart Adam <s.adam at diffingo.com> - 1:1.8.0.3-1
+- Update to 1.8.0.3
+
 * Fri Jun 19 2009 Stewart Adam <s.adam at diffingo.com> - 1:1.7.3-0.1.beta3
 - Update to 1.7.3 beta3
 - Remove gcc44 patch
