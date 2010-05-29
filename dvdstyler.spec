@@ -1,7 +1,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        1.8.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -92,9 +92,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Sat May 29 2010 Stewart Adam <s.adam at diffingo.com> - 1:1.8.0.3-2
+- Link against libjpeg
+- Package the template files
+- Remove some of the outdated Requires and BuildRequires
+
 * Wed May 19 2010 Stewart Adam <s.adam at diffingo.com> - 1:1.8.0.3-1
 - Update to 1.8.0.3
-- Remove some of the outdated Requires and BuildRequires
 
 * Sat Oct 24 2009 Stewart Adam <s.adam at diffingo.com> - 1:1.7.4-1
 - Update to 1.7.4
