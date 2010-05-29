@@ -9,6 +9,8 @@ License:        GPLv2+
 URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 Patch0:         dvdstyler-make-desktopfile-valid.patch
+Patch1:         dvdstyler-1.8-libjpeg.patch
+Patch2:         dvdstyler-1.8-template-subdir.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # build
 BuildRequires:  automake, autoconf, gettext
@@ -17,10 +19,7 @@ BuildRequires:  wxGTK-devel >= 2.6.3
 BuildRequires:  wxsvg-devel >= 1.0-6
 BuildRequires:  ffmpeg-devel
 BuildRequires:  libgnomeui-devel
-BuildRequires:  zip
 # mpeg
-BuildRequires:  mpgtx
-BuildRequires:  mjpegtools
 BuildRequires:  dvdauthor
 # iso/burn
 BuildRequires:  mkisofs
@@ -28,17 +27,17 @@ BuildRequires:  dvd+rw-tools
 #images
 BuildRequires:  libjpeg-devel
 BuildRequires:  libexif-devel
-BuildRequires:  netpbm-progs
-# finally
-BuildRequires:  desktop-file-utils
+# documentation
+BuildRequires:  zip
 BuildRequires:  xmlto
+
+BuildRequires:  desktop-file-utils
 
 Requires:       dvd+rw-tools
 Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       mkisofs
 Requires:       mpgtx
-Requires:       netpbm-progs
 Requires:       wxsvg >= 1.0-6
 # note: do not add Require: totem-backend or another DVD player - see
 # RPM Fusion bug 366 for more details
@@ -51,11 +50,13 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 %prep
 %setup -q -n DVDStyler-%{version}
-%patch0 -b .validdesktop
+%patch0 -b .nonvalid
+%patch1 -b .libjpeg
+%patch2 -b .templates
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
-#./autogen.sh
+./autogen.sh
 %configure \
   --disable-dependency-tracking
 # docs folder is not smp_mflags safe
@@ -93,6 +94,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Wed May 19 2010 Stewart Adam <s.adam at diffingo.com> - 1:1.8.0.3-1
 - Update to 1.8.0.3
+- Remove some of the outdated Requires and BuildRequires
 
 * Sat Oct 24 2009 Stewart Adam <s.adam at diffingo.com> - 1:1.7.4-1
 - Update to 1.7.4
