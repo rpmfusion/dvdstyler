@@ -1,0 +1,8 @@
+--- Makefile.am.old	2010-05-29 15:23:15.339439319 -0400
++++ Makefile.am	2010-05-29 15:23:20.697439611 -0400
+@@ -1,4 +1,4 @@
+-SUBDIRS = wxVillaLib src locale backgrounds buttons objects data docs
++SUBDIRS = wxVillaLib src locale backgrounds buttons objects data docs templates
+ ACLOCAL_AMFLAGS=-I.
+ doc_DATA = AUTHORS COPYING INSTALL README ChangeLog
+ run: all
