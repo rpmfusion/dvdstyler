@@ -1,7 +1,7 @@
 Name:           dvdstyler
 Epoch:          1
-Version:        1.8.0.3
-Release:        2%{?dist}
+Version:        1.8.1
+Release:        1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -9,11 +9,12 @@ License:        GPLv2+
 URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 Patch0:         dvdstyler-make-desktopfile-valid.patch
-Patch1:         dvdstyler-1.8-libjpeg.patch
-Patch2:         dvdstyler-1.8-template-subdir.patch
+Patch1:         dvdstyler-wxVillaLib-libjpeg.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # build
-BuildRequires:  automake, autoconf, gettext
+BuildRequires:  automake, autoconf
+BuildRequires:  gettext
+BuildRequires:  byacc
 # libraries
 BuildRequires:  wxGTK-devel >= 2.6.3
 BuildRequires:  wxsvg-devel >= 1.0-6
@@ -50,9 +51,8 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 %prep
 %setup -q -n DVDStyler-%{version}
-%patch0 -b .nonvalid
+%patch0 -b .validdesktop
 %patch1 -b .libjpeg
-%patch2 -b .templates
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Sat Nov 20 2010 Stewart Adam <s.adam at diffingo.com> - 1:1.8.1-1
+- Update to 1.8.1
+
 * Sat May 29 2010 Stewart Adam <s.adam at diffingo.com> - 1:1.8.0.3-2
 - Link against libjpeg
 - Package the template files
