@@ -1,6 +1,6 @@
 Name:           dvdstyler
 Epoch:          1
-Version:        1.8.1
+Version:        1.8.3
 Release:        1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
@@ -23,6 +23,7 @@ BuildRequires:  libgnomeui-devel
 # mpeg
 BuildRequires:  dvdauthor
 # iso/burn
+BuildRequires:  libudev-devel
 BuildRequires:  mkisofs
 BuildRequires:  dvd+rw-tools
 #images
@@ -92,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Mon May 2 2011 Stewart Adam <s.adam at diffingo.com> - 1:1.8.3-1
+- Update to 1.8.3
+
 * Sat Nov 20 2010 Stewart Adam <s.adam at diffingo.com> - 1:1.8.1-1
 - Update to 1.8.1
 - Merge change from F-13: Remove some of the outdated Requires and BuildRequires
