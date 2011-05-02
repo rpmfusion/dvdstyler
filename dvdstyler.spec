@@ -1,6 +1,6 @@
 Name:           dvdstyler
 Epoch:          1
-Version:        1.7.4
+Version:        1.8.3
 Release:        1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
@@ -9,39 +9,37 @@ License:        GPLv2+
 URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 Patch0:         dvdstyler-make-desktopfile-valid.patch
-# Patch from http://sources.gentoo.org/viewcvs.py/*checkout*/gentoo-x86/media-video/dvdstyler/files/dvdstyler-1.7.4-autoconf.patch?rev=1.1
-# Fixes translation compile issue
-Patch1:         dvdstyler-1.7.4-autoconf.patch
+Patch1:         dvdstyler-wxVillaLib-libjpeg.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # build
-BuildRequires:  automake, autoconf, gettext
+BuildRequires:  automake, autoconf
+BuildRequires:  gettext
+BuildRequires:  byacc
 # libraries
 BuildRequires:  wxGTK-devel >= 2.6.3
 BuildRequires:  wxsvg-devel >= 1.0-6
 BuildRequires:  ffmpeg-devel
 BuildRequires:  libgnomeui-devel
-BuildRequires:  zip
 # mpeg
-BuildRequires:  mpgtx
-BuildRequires:  mjpegtools
 BuildRequires:  dvdauthor
 # iso/burn
+BuildRequires:  libudev-devel
 BuildRequires:  mkisofs
 BuildRequires:  dvd+rw-tools
 #images
 BuildRequires:  libjpeg-devel
 BuildRequires:  libexif-devel
-BuildRequires:  netpbm-progs
-# finally
-BuildRequires:  desktop-file-utils
+# documentation
+BuildRequires:  zip
 BuildRequires:  xmlto
+
+BuildRequires:  desktop-file-utils
 
 Requires:       dvd+rw-tools
 Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       mkisofs
 Requires:       mpgtx
-Requires:       netpbm-progs
 Requires:       wxsvg >= 1.0-6
 # note: do not add Require: totem-backend or another DVD player - see
 # RPM Fusion bug 366 for more details
@@ -55,11 +53,11 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 %prep
 %setup -q -n DVDStyler-%{version}
 %patch0 -b .validdesktop
-%patch1 -p0 -b .autoconf
+%patch1 -b .libjpeg
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
-#./autogen.sh
+./autogen.sh
 %configure \
   --disable-dependency-tracking
 # docs folder is not smp_mflags safe
@@ -95,6 +93,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Mon May 2 2011 Stewart Adam <s.adam at diffingo.com> - 1:1.8.3-1
+- Update to 1.8.3
+- Port changes from F-14 branch
+
 * Sat Oct 24 2009 Stewart Adam <s.adam at diffingo.com> - 1:1.7.4-1
 - Update to 1.7.4
 
