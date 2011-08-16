@@ -1,7 +1,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        1.8.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -10,6 +10,7 @@ URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 Patch0:         dvdstyler-make-desktopfile-valid.patch
 Patch1:         dvdstyler-wxVillaLib-libjpeg.patch
+Patch2:         dvdstyler-ffmpeg-use-enum.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # build
 BuildRequires:  automake, autoconf
@@ -54,6 +55,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 %setup -q -n DVDStyler-%{version}
 %patch0 -b .validdesktop
 %patch1 -b .libjpeg
+%patch2 -p1 -b .ffmpeg
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
@@ -93,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Sun Aug 14 2011 Dominik Mierzejewski <rpm at greysector.net> - 1:1.8.3-2
+- Fix build with current FFmpeg
+
 * Mon May 2 2011 Stewart Adam <s.adam at diffingo.com> - 1:1.8.3-1
 - Update to 1.8.3
 
