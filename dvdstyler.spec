@@ -1,7 +1,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        1.8.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -93,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Mon Sep 26 2011 Nicolas Chauvet <kwizart@gmail.com> - 1:1.8.3-2
+- Rebuilt for FFmpeg-0.8
+
 * Mon May 2 2011 Stewart Adam <s.adam at diffingo.com> - 1:1.8.3-1
 - Update to 1.8.3
 - Port changes from F-14 branch
