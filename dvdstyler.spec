@@ -1,13 +1,13 @@
 Name:           dvdstyler
 Epoch:          1
-Version:        1.8.4.3
-Release:        1%{?dist}
+Version:        2.0
+Release:        0.1.rc1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
-Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
+Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}rc1.tar.bz2
 Patch0:         dvdstyler-make-desktopfile-valid.patch
 Patch1:         dvdstyler-wxVillaLib-libjpeg.patch
 # Based on http://www.freebsd.org/cgi/cvsweb.cgi/ports/multimedia/dvdstyler/files/patch-docs-Makefile.in?rev=1.1;content-type=text%2Fplain
@@ -54,7 +54,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 
 %prep
-%setup -q -n DVDStyler-%{version}
+%setup -q -n DVDStyler-%{version}rc1
 %patch0 -b .validdesktop
 %patch1 -b .libjpeg
 %patch2 -b .xmlto
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Wed Sep 28 2011 Stewart Adam <s.adam at diffingo.com> 1:2.0-0.1.rc1
+- Update to 2.0rc1
+
 * Wed Sep 28 2011 Stewart Adam <s.adam at diffingo.com> 1:1.8.4.3-1
 - Update to 1.8.4.3
 
