@@ -1,7 +1,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        2.0
-Release:        0.1.rc1%{?dist}
+Release:        0.2.rc1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Wed Feb 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 1:2.0-0.2.rc1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Wed Sep 28 2011 Stewart Adam <s.adam at diffingo.com> 1:2.0-0.1.rc1
 - Update to 2.0rc1
 
