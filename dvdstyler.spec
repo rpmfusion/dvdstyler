@@ -1,7 +1,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        2.0
-Release:        0.3.rc1%{?dist}
+Release:        0.4.rc1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Tue Jun 26 2012 Nicolas Chauvet <kwizart@gmail.com> - 1:2.0-0.4.rc1
+- Rebuilt for FFmpeg
+
 * Tue Feb 28 2012 Nicolas Chauvet <kwizart@gmail.com> - 1:2.0-0.3.rc1
 - Rebuilt for x264/FFmpeg
 
