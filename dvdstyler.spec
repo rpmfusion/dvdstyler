@@ -1,7 +1,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        2.0
-Release:        0.4.rc1%{?dist}
+Release:        0.5.rc1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -26,7 +26,7 @@ BuildRequires:  libgnomeui-devel
 # mpeg
 BuildRequires:  dvdauthor
 # iso/burn
-BuildRequires:  libudev-devel
+BuildRequires:  pkgconfig(libudev)
 BuildRequires:  mkisofs
 BuildRequires:  dvd+rw-tools
 #images
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Wed Jul 11 2012 Nicolas Chauvet <kwizart@gmail.com> - 1:2.0-0.5.rc1
+- Switch to pkgconfig(libudev)
+
 * Tue Jun 26 2012 Nicolas Chauvet <kwizart@gmail.com> - 1:2.0-0.4.rc1
 - Rebuilt for FFmpeg
 
