@@ -1,0 +1,277 @@
+diff -up DVDStyler-2.0rc1/src/mediaenc_ffmpeg.cpp.ffmpeg54 DVDStyler-2.0rc1/src/mediaenc_ffmpeg.cpp
+--- DVDStyler-2.0rc1/src/mediaenc_ffmpeg.cpp.ffmpeg54	2011-08-02 21:03:48.000000000 +0200
++++ DVDStyler-2.0rc1/src/mediaenc_ffmpeg.cpp	2012-07-11 22:34:36.027178790 +0200
+@@ -3,7 +3,7 @@
+ // Purpose:     FFMPEG Media Encoder
+ // Author:      Alex Thuering
+ // Created:     04.08.2007
+-// RCS-ID:      $Id: mediaenc_ffmpeg.cpp,v 1.27 2011/08/02 19:03:48 ntalex Exp $
++// RCS-ID:      $Id: mediaenc_ffmpeg.cpp,v 1.30 2012/06/04 20:35:11 ntalex Exp $
+ // Copyright:   (c) Alex Thuering
+ // Licence:     GPL
+ /////////////////////////////////////////////////////////////////////////////
+@@ -26,6 +26,7 @@ extern "C" {
+ #define __STDC_LIMIT_MACROS
+ #include <libavformat/avformat.h>
+ #include <libswscale/swscale.h>
++#include <libavutil/mathematics.h>
+ }
+ 
+ #define AUDIO_BUF_SIZE 524288
+@@ -37,7 +38,6 @@ wxFfmpegMediaEncoder::wxFfmpegMediaEncod
+ 	m_videoStm = NULL;
+ 	m_audioStm = NULL;
+ 	m_samples = NULL;
+-	m_audioOutbuf = NULL;
+ 	m_picture = NULL;
+ 	m_imgConvertCtx = NULL;
+ 	m_videoOutbuf = NULL;
+@@ -58,6 +58,14 @@ wxString wxFfmpegMediaEncoder::GetBacken
+ #define av_guess_format guess_format
+ #endif
+ 
++void print_error(const char *filename, int err) {
++	char errbuf[128];
++	const char *errbuf_ptr = errbuf;
++	if (av_strerror(err, errbuf, sizeof(errbuf)) < 0)
++		errbuf_ptr = strerror(AVUNERROR(err));
++	wxLogError(wxT("%s: %s\n"), filename, errbuf_ptr);
++}
++
+ bool wxFfmpegMediaEncoder::BeginEncode(const wxString& fileName, VideoFormat videoFormat, AudioFormat audioFormat,
+ 		AspectRatio aspectRatio, int videoBitrate) {
+ 	EndEncode();
+@@ -92,10 +100,6 @@ bool wxFfmpegMediaEncoder::BeginEncode(c
+ 	if (!addAudioStream(outputFormat->audio_codec))
+ 		return false;
+ 
+-	if (av_set_parameters(m_outputCtx, NULL) < 0) {
+-		wxLogError(wxT("Invalid output format parameters"));
+-		return false;
+-	}
+ 	av_dump_format(m_outputCtx, 0, (const char*) fileName.fn_str(), 1);
+ 	m_outputCtx->packet_size = 2048;
+ 	
+@@ -107,16 +111,22 @@ bool wxFfmpegMediaEncoder::BeginEncode(c
+ 		return false;
+ 
+ 	// open the output file
+-	if (avio_open(&m_outputCtx->pb, fileName.mb_str(), URL_WRONLY) < 0) {
++	if (avio_open2(&m_outputCtx->pb, fileName.mb_str(), AVIO_FLAG_WRITE, NULL, NULL) < 0) {
+ 		wxLogError(wxT("Could not open '%s'"), fileName.c_str());
+ 		return false;
+ 	}
++	
+ 	// write the stream header
++	AVDictionary *opts = NULL;
++	av_dict_set(&opts, "packet_size", "2048", 0);
++	av_dict_set(&opts, "muxrate", "10080000", 0);
++	char tmpstr[48];
++	snprintf(tmpstr, sizeof(tmpstr), "%i", (int)(0.5 * AV_TIME_BASE));
++	av_dict_set(&opts, "preload", tmpstr, 0);
+ 	m_outputCtx->packet_size = 2048;
+-	m_outputCtx->mux_rate = 10080000;
+-	m_outputCtx->preload = (int) (0.5 * AV_TIME_BASE);
+ 	m_outputCtx->max_delay = (int) (0.7 * AV_TIME_BASE);
+-	av_write_header(m_outputCtx);
++	avformat_write_header(m_outputCtx, &opts);
++	av_dict_free(&opts);
+ 	return true;
+ }
+ 
+@@ -126,11 +136,12 @@ bool wxFfmpegMediaEncoder::addVideoStrea
+ 		m_videoStm = NULL;
+ 		return true;
+ 	}
+-	m_videoStm = av_new_stream(m_outputCtx, 0);
++	m_videoStm = avformat_new_stream(m_outputCtx, NULL);
+ 	if (!m_videoStm) {
+ 		wxLogError(wxT("Could not alloc stream"));
+ 		return false;
+ 	}
++	m_videoStm->id = 0;
+ 
+ 	AVCodecContext* c = m_videoStm->codec;
+ 	c->thread_count = m_threadCount;
+@@ -158,41 +169,46 @@ bool wxFfmpegMediaEncoder::addAudioStrea
+ 		m_audioStm = NULL;
+ 		return true;
+ 	}
+-	m_audioStm = av_new_stream(m_outputCtx, 1);
++	m_audioStm = avformat_new_stream(m_outputCtx, NULL);
+ 	if (!m_audioStm) {
+ 		wxLogError(wxT("Could not alloc stream"));
+ 		return false;
+ 	}
++	m_audioStm->id = 1;
+ 
+ 	AVCodecContext* c = m_audioStm->codec;
+ 	c->thread_count = m_threadCount;
++	c->time_base.den = 25;
++	c->time_base.num = 1;
+ 	c->codec_id = (CodecID) codecId;
+ 	c->codec_type = AVMEDIA_TYPE_AUDIO;
+ 	c->bit_rate = 64000;
+ 	c->sample_rate = 48000;
+ 	c->sample_fmt = codecId == CODEC_ID_AC3 ? AV_SAMPLE_FMT_FLT : AV_SAMPLE_FMT_S16;
+ 	c->channels = 2;
++	// some formats want stream headers to be separate
++	if(m_outputCtx->oformat->flags & AVFMT_GLOBALHEADER)
++	    c->flags |= CODEC_FLAG_GLOBAL_HEADER;
++	
+ 	return true;
+ }
+ 
+ bool wxFfmpegMediaEncoder::OpenAudioEncoder() {
+ 	AVCodecContext* c = m_audioStm->codec;
+ 	
+-	
+ 	// find the audio encoder and open it
+ 	AVCodec* codec = avcodec_find_encoder(c->codec_id);
+ 	if (!codec) {
+ 		wxLogError(wxT("Audio codec not found"));
+ 		return false;
+ 	}
+-	if (avcodec_open(c, codec) < 0) {
++	if (avcodec_open2(c, codec, NULL) < 0) {
+ 		wxLogError(wxT("Could not open audio codec"));
+ 		return false;
+ 	}
+ 
+-	m_audioOutbuf = (uint8_t*) av_malloc(AUDIO_BUF_SIZE);
+-	m_samples = (int16_t*) av_malloc(AUDIO_BUF_SIZE/2);
+-	memset(m_samples, 0, AUDIO_BUF_SIZE/2);
++    m_samples = (int16_t*) av_malloc(c->frame_size * av_get_bytes_per_sample(c->sample_fmt) * c->channels);
++	memset(m_samples, 0, c->frame_size * av_get_bytes_per_sample(c->sample_fmt) * c->channels);
+ 	return true;
+ }
+ 
+@@ -203,9 +219,6 @@ void wxFfmpegMediaEncoder::CloseAudioEnc
+ 	if (m_samples)
+ 		av_free(m_samples);
+ 	m_samples = NULL;
+-	if (m_audioOutbuf)
+-		av_free(m_audioOutbuf);
+-	m_audioOutbuf = NULL;
+ 	m_audioStm = NULL;
+ }
+ 
+@@ -233,7 +246,7 @@ bool wxFfmpegMediaEncoder::OpenVideoEnco
+ 		wxLogError(wxT("Video codec not found"));
+ 		return false;
+ 	}
+-	if (avcodec_open(c, codec) < 0) {
++	if (avcodec_open2(c, codec, NULL) < 0) {
+ 		wxLogError(wxT("Could not open video codec"));
+ 		return false;
+ 	}
+@@ -312,24 +325,27 @@ bool wxFfmpegMediaEncoder::EncodeImage(w
+ }
+ 
+ bool wxFfmpegMediaEncoder::writeAudioFrame() {
+-	AVPacket pkt;
++	AVPacket pkt = { 0 }; // data and size must be 0;
++	AVFrame *frame = avcodec_alloc_frame();
++	int got_packet;
++
+ 	av_init_packet(&pkt);
+-	
+-	AVCodecContext* c = m_audioStm->codec;
+-	memset(m_audioOutbuf, 0, AUDIO_BUF_SIZE);
+-	pkt.size = avcodec_encode_audio(c, m_audioOutbuf, AUDIO_BUF_SIZE, m_samples);
+-	if (pkt.size < 0) {
+-		wxLogError(wxT("Audio encoding failed"));
+-		return false;
+-	}
+-	pkt.pts = av_rescale_q(c->coded_frame->pts, c->time_base, m_audioStm->time_base);
+-	pkt.flags |= AV_PKT_FLAG_KEY;
+-	pkt.stream_index = m_audioStm->index;
+-	pkt.data = m_audioOutbuf;
++	AVCodecContext *c = m_audioStm->codec;
++
++	frame->nb_samples = c->frame_size;
++	avcodec_fill_audio_frame(frame, c->channels, c->sample_fmt, (uint8_t *) m_samples, c->frame_size
++			* av_get_bytes_per_sample(c->sample_fmt) * c->channels, 1);
++
++	avcodec_encode_audio2(c, &pkt, frame, &got_packet);
++	if (!got_packet)
++		return true;
++
++	pkt.stream_index = m_audioStm->index; 
+ 	
+ 	// write the compressed frame in the media file
+-	if (av_interleaved_write_frame(m_outputCtx, &pkt) != 0) {
+-		wxLogError(wxT("Error while writing audio frame"));
++	int ret = av_interleaved_write_frame(m_outputCtx, &pkt);
++	if (ret < 0) {
++		print_error("Error while writing audio frame", ret);
+ 		return false;
+ 	}
+ 	return true;
+@@ -339,6 +355,33 @@ bool wxFfmpegMediaEncoder::writeVideoFra
+ 	AVCodecContext *c = m_videoStm->codec;
+ 	
+ 	// encode the image
++#if LIBAVFORMAT_VERSION_INT >= AV_VERSION_INT(54, 0, 0)
++	AVPacket pkt;
++	av_init_packet(&pkt);
++	pkt.data = m_videoOutbuf;
++	pkt.size = VIDEO_BUF_SIZE;
++	
++	int got_packet = 0;
++	int ret = avcodec_encode_video2(c, &pkt, m_picture, &got_packet);
++	if (ret < 0) {
++		print_error("Error while writing video frame", ret);
++		return false;
++	}
++	if (got_packet) {
++		if (pkt.pts != (int64_t) AV_NOPTS_VALUE)
++			pkt.pts = av_rescale_q(pkt.pts, c->time_base, m_videoStm->time_base);
++		if (pkt.dts != (int64_t) AV_NOPTS_VALUE)
++			pkt.dts = av_rescale_q(pkt.dts, c->time_base, m_videoStm->time_base);
++		pkt.stream_index = m_videoStm->index;
++		
++		// write the compressed frame in the media file
++		ret = av_interleaved_write_frame(m_outputCtx, &pkt);
++		if (ret < 0) {
++			print_error("Error while writing video frame", ret);
++			return false;
++		}
++	}
++#else
+ 	int out_size = avcodec_encode_video(c, m_videoOutbuf, VIDEO_BUF_SIZE, m_picture);
+ 	if (out_size < 0) {
+ 		wxLogError(wxT("Video encoding failed"));
+@@ -362,6 +405,7 @@ bool wxFfmpegMediaEncoder::writeVideoFra
+ 		wxLogError(wxT("Error while writing video frame"));
+ 		return false;
+ 	}
++#endif
+ 	return true;
+ }
+ 
+diff -up DVDStyler-2.0rc1/src/mediaenc_ffmpeg.h.ffmpeg54 DVDStyler-2.0rc1/src/mediaenc_ffmpeg.h
+--- DVDStyler-2.0rc1/src/mediaenc_ffmpeg.h.ffmpeg54	2009-06-15 19:59:16.000000000 +0200
++++ DVDStyler-2.0rc1/src/mediaenc_ffmpeg.h	2012-07-11 22:37:35.862061554 +0200
+@@ -3,7 +3,7 @@
+ // Purpose:     FFMPEG Media Encoder
+ // Author:      Alex Thuering
+ // Created:     04.08.2007
+-// RCS-ID:      $Id: mediaenc_ffmpeg.h,v 1.8 2009/06/15 17:59:16 ntalex Exp $
++// RCS-ID:      $Id: mediaenc_ffmpeg.h,v 1.9 2012/05/31 21:01:49 ntalex Exp $
+ // Copyright:   (c) Alex Thuering
+ // Licence:     GPL
+ /////////////////////////////////////////////////////////////////////////////
+@@ -40,7 +40,6 @@ private:
+     bool addAudioStream(int codecId);
+     
+     int16_t* m_samples;
+-    uint8_t* m_audioOutbuf;
+     bool OpenAudioEncoder();
+     void CloseAudioEncoder();
+     
+@@ -57,3 +56,4 @@ private:
+ };
+ 
+ #endif // WX_FFMPEG_MEDIA_ENCODER_H
++

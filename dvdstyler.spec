@@ -13,6 +13,7 @@ Patch1:         dvdstyler-wxVillaLib-libjpeg.patch
 # Based on http://www.freebsd.org/cgi/cvsweb.cgi/ports/multimedia/dvdstyler/files/patch-docs-Makefile.in?rev=1.1;content-type=text%2Fplain
 # Fixes 'directory not empty' error because of xmlto outputting a new .proc file
 Patch2:         dvdstyler-docs-xmlto.patch
+Patch3:         dvdstyler-ffmpeg54.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # build
 BuildRequires:  automake, autoconf
@@ -58,6 +59,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 %patch0 -b .validdesktop
 %patch1 -b .libjpeg
 %patch2 -b .xmlto
+%patch3 -p1 -b .ffmpeg54
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
