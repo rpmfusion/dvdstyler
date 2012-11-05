@@ -1,18 +1,15 @@
 Name:           dvdstyler
 Epoch:          1
-Version:        2.0
-Release:        0.1.rc1%{?dist}
+Version:        2.3.3
+Release:        1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
-Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}rc1.tar.bz2
+Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 Patch0:         dvdstyler-make-desktopfile-valid.patch
 Patch1:         dvdstyler-wxVillaLib-libjpeg.patch
-# Based on http://www.freebsd.org/cgi/cvsweb.cgi/ports/multimedia/dvdstyler/files/patch-docs-Makefile.in?rev=1.1;content-type=text%2Fplain
-# Fixes 'directory not empty' error because of xmlto outputting a new .proc file
-Patch2:         dvdstyler-docs-xmlto.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # build
 BuildRequires:  automake, autoconf
@@ -22,11 +19,12 @@ BuildRequires:  byacc
 BuildRequires:  wxGTK-devel >= 2.6.3
 BuildRequires:  wxsvg-devel >= 1.0.10
 BuildRequires:  ffmpeg-devel
+BuildRequires:  ffmpeg
 BuildRequires:  libgnomeui-devel
 # mpeg
 BuildRequires:  dvdauthor
 # iso/burn
-BuildRequires:  libudev-devel
+BuildRequires:  pkgconfig(libudev)
 BuildRequires:  mkisofs
 BuildRequires:  dvd+rw-tools
 #images
@@ -43,7 +41,7 @@ Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       mkisofs
 Requires:       mpgtx
-Requires:       wxsvg >= 1.0.10
+Requires:       wxsvg >= 1.1.9
 # note: do not add Require: totem-backend or another DVD player - see
 # RPM Fusion bug 366 for more details
 
@@ -54,10 +52,9 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 
 %prep
-%setup -q -n DVDStyler-%{version}rc1
+%setup -q -n DVDStyler-%{version}
 %patch0 -b .validdesktop
 %patch1 -b .libjpeg
-%patch2 -b .xmlto
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
@@ -83,10 +80,6 @@ desktop-file-install --vendor rpmfusion \
 %find_lang %{name}
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING README TODO
@@ -97,6 +90,28 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*.gz
 
 %changelog
+* Sun Nov 04 2012 Sérgio Basto <sergio@serjux.com> - 2.3.3-1
+- New upstream release.
+
+* Sun Aug 26 2012 Sérgio Basto <sergio@serjux.com> - 2.3-1
+- Update upstream release
+
+* Tue Aug 07 2012 Sérgio Basto <sergio@serjux.com> - 2.3-0.1.rc1
+- Update upstream release
+- Drop patch2 and patch3, seems that was applied in upstream
+
+* Wed Jul 11 2012 Nicolas Chauvet <kwizart@gmail.com> - 1:2.0-0.5.rc1
+- Switch to pkgconfig(libudev)
+
+* Tue Jun 26 2012 Nicolas Chauvet <kwizart@gmail.com> - 1:2.0-0.4.rc1
+- Rebuilt for FFmpeg
+
+* Tue Feb 28 2012 Nicolas Chauvet <kwizart@gmail.com> - 1:2.0-0.3.rc1
+- Rebuilt for x264/FFmpeg
+
+* Wed Feb 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 1:2.0-0.2.rc1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Wed Sep 28 2011 Stewart Adam <s.adam at diffingo.com> 1:2.0-0.1.rc1
 - Update to 2.0rc1
 
