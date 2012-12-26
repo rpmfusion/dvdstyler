@@ -1,6 +1,6 @@
 Name:           dvdstyler
 Epoch:          1
-Version:        2.3.4
+Version:        2.3.5
 Release:        1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
@@ -10,7 +10,7 @@ URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 Patch0:         dvdstyler-make-desktopfile-valid.patch
 Patch1:         dvdstyler-wxVillaLib-libjpeg.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Patch2:         dvdstyler-addmissedGuide_pt.patch
 # build
 BuildRequires:  automake, autoconf
 BuildRequires:  gettext
@@ -55,6 +55,8 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 %setup -q -n DVDStyler-%{version}
 %patch0 -b .validdesktop
 %patch1 -b .libjpeg
+%patch2 -b .guide_pt
+
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
@@ -67,7 +69,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/dvdstyler
@@ -90,6 +91,14 @@ desktop-file-install --vendor rpmfusion \
 %{_mandir}/*/*.gz
 
 %changelog
+* Wed Dec 26 2012 Sérgio Basto <sergio@serjux.com> - 2.3.5-1
+- New upstream release.
+- Added new guide_pt and guide_ro from CVS that was missing in source.
+- Minor clean ups
+
+* Sat Nov 24 2012 Sérgio Basto <sergio@serjux.com> - 2.3.4-2
+- Rebuild for ffmpeg-libs-1.0
+
 * Thu Nov 22 2012 Sérgio Basto <sergio@serjux.com> - 2.3.4-1
 - New upstream release.
 
