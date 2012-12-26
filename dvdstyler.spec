@@ -1,7 +1,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        2.3.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
