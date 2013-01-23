@@ -1,22 +1,23 @@
+%global prerel rc1
+
 Name:           dvdstyler
 Epoch:          1
-Version:        2.3.5
-Release:        2%{?dist}
+Version:        2.4
+Release:        0.1%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
-Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
+Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
 Patch0:         dvdstyler-make-desktopfile-valid.patch
-Patch1:         dvdstyler-wxVillaLib-libjpeg.patch
 # build
 BuildRequires:  automake, autoconf
 BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
 BuildRequires:  wxGTK-devel >= 2.6.3
-BuildRequires:  wxsvg-devel >= 1.0.10
+BuildRequires:  wxsvg-devel >= 1.1.12
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
 BuildRequires:  libgnomeui-devel
@@ -40,7 +41,7 @@ Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       mkisofs
 Requires:       mpgtx
-Requires:       wxsvg >= 1.1.9
+Requires:       wxsvg >= 1.1.12
 # note: do not add Require: totem-backend or another DVD player - see
 # RPM Fusion bug 366 for more details
 
@@ -51,9 +52,8 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 
 %prep
-%setup -q -n DVDStyler-%{version}
+%setup -q -n DVDStyler-%{version}%{?prerel}
 %patch0 -b .validdesktop
-%patch1 -b .libjpeg
 
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
@@ -89,6 +89,10 @@ desktop-file-install --vendor rpmfusion \
 %{_mandir}/*/*.gz
 
 %changelog
+* Wed Jan 23 2013 Sérgio Basto <sergio@serjux.com> - 2.4-0.1.rc1
+- Update to 2.4rc1, to fix rfbz #2652 and rebuild for new wxSVG.
+- drop dvdstyler-wxVillaLib-libjpeg.patch, fixed upstream.
+
 * Wed Dec 26 2012 Sérgio Basto <sergio@serjux.com> - 2.3.5-2
 - New upstream source, which have guide_pt and guide_ro.
 
