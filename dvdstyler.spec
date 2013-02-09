@@ -1,9 +1,9 @@
-%global prerel rc1
+#global prerel rc1
 
 Name:           dvdstyler
 Epoch:          1
 Version:        2.4
-Release:        0.1%{?prerel}%{?dist}
+Release:        1%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -89,6 +89,9 @@ desktop-file-install --vendor rpmfusion \
 %{_mandir}/*/*.gz
 
 %changelog
+* Sat Feb 09 2013 Sérgio Basto <sergio@serjux.com> - 2.4-1
+- New upstream release.
+
 * Wed Jan 23 2013 Sérgio Basto <sergio@serjux.com> - 2.4-0.1.rc1
 - Update to 2.4rc1, to fix rfbz #2652 and rebuild for new wxSVG.
 - drop dvdstyler-wxVillaLib-libjpeg.patch, fixed upstream.
