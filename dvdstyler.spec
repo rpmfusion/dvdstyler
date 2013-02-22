@@ -2,7 +2,7 @@
 
 Name:           dvdstyler
 Epoch:          1
-Version:        2.4
+Version:        2.4.1
 Release:        1%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
@@ -17,7 +17,7 @@ BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
 BuildRequires:  wxGTK-devel >= 2.6.3
-BuildRequires:  wxsvg-devel >= 1.1.12
+BuildRequires:  wxsvg-devel >= 1.1.13
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
 BuildRequires:  libgnomeui-devel
@@ -89,6 +89,9 @@ desktop-file-install --vendor rpmfusion \
 %{_mandir}/*/*.gz
 
 %changelog
+* Wed Feb 20 2013 Sérgio Basto <sergio@serjux.com> - 2.4.1-1
+- Update to 2.4.1
+
 * Sat Feb 09 2013 Sérgio Basto <sergio@serjux.com> - 2.4-1
 - New upstream release.
 
