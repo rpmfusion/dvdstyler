@@ -3,7 +3,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        2.4.2
-Release:        1%{?prerel}%{?dist}
+Release:        2%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -89,6 +89,9 @@ desktop-file-install --vendor rpmfusion \
 %{_mandir}/*/*.gz
 
 %changelog
+* Wed Mar 20 2013 Sérgio Basto <sergio@serjux.com> - 2.4.2-2
+- Just new build tag.
+
 * Tue Mar 19 2013 Sérgio Basto <sergio@serjux.com> - 2.4.2-1
 - New upstream release.
 
