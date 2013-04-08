@@ -2,7 +2,7 @@
 
 Name:           dvdstyler
 Epoch:          1
-Version:        2.4.2
+Version:        2.4.3
 Release:        1%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
@@ -17,7 +17,7 @@ BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
 BuildRequires:  wxGTK-devel >= 2.6.3
-BuildRequires:  wxsvg-devel >= 1.1.13
+BuildRequires:  wxsvg-devel >= 1.1.14
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
 BuildRequires:  libgnomeui-devel
@@ -41,7 +41,7 @@ Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       mkisofs
 Requires:       mpgtx
-Requires:       wxsvg >= 1.1.12
+Requires:       wxsvg >= 1.1.14
 # note: do not add Require: totem-backend or another DVD player - see
 # RPM Fusion bug 366 for more details
 
@@ -58,6 +58,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
+chmod +x ./autogen.sh ./configure
 ./autogen.sh
 %configure \
   --disable-dependency-tracking
@@ -89,6 +90,9 @@ desktop-file-install --vendor rpmfusion \
 %{_mandir}/*/*.gz
 
 %changelog
+* Mon Apr 08 2013 Sérgio Basto <sergio@serjux.com> - 2.4.3-1
+- Update to 2.4.3
+
 * Tue Mar 19 2013 Sérgio Basto <sergio@serjux.com> - 2.4.2-1
 - New upstream release.
 
