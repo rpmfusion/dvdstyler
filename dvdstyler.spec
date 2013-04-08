@@ -12,7 +12,7 @@ URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
 Patch0:         dvdstyler-make-desktopfile-valid.patch
 # build
-BuildRequires:  automake, autoconf
+BuildRequires:  automake autoconf
 BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
