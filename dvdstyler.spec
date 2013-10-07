@@ -90,6 +90,9 @@ desktop-file-install --vendor rpmfusion \
 %{_mandir}/*/*.gz
 
 %changelog
+* Mon Oct 07 2013 Sérgio Basto <sergio@serjux.com> - 2.5.2-1
+- Update to 2.5.2
+
 * Mon Sep 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 1:2.5-3
 - Rebuilt
 
