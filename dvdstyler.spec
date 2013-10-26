@@ -1,9 +1,9 @@
-#global prerel rc1
+%global prerel rc2
 
 Name:           dvdstyler
 Epoch:          1
-Version:        2.5.2
-Release:        2%{?prerel}%{?dist}
+Version:        2.6
+Release:        0.1_%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -16,7 +16,7 @@ BuildRequires:  automake autoconf
 BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
-BuildRequires:  wxGTK-devel >= 2.6.3
+BuildRequires:  wxGTK-devel >= 2.8.7
 BuildRequires:  wxsvg-devel >= 1.1.14
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
@@ -90,6 +90,9 @@ desktop-file-install --vendor rpmfusion \
 %{_mandir}/*/*.gz
 
 %changelog
+* Sat Oct 26 2013 Sérgio Basto <sergio@serjux.com> - 2.6-0.1_rc2
+- Update to 2.6rc2
+
 * Sun Oct 20 2013 Sérgio Basto <sergio@serjux.com> - 2.5.2-2
 - Rebuilt for wxsvg-1.2.1
 
