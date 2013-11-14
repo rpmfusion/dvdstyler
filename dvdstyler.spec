@@ -1,9 +1,9 @@
-%global prerel rc2
+#global prerel rc3
 
 Name:           dvdstyler
 Epoch:          1
 Version:        2.6
-Release:        0.1_%{?prerel}%{?dist}
+Release:        1%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -90,6 +90,9 @@ desktop-file-install --vendor rpmfusion \
 %{_mandir}/*/*.gz
 
 %changelog
+* Thu Nov 14 2013 Sérgio Basto <sergio@serjux.com> - 2.6-1
+- Update to 2.6 final version.
+
 * Sat Oct 26 2013 Sérgio Basto <sergio@serjux.com> - 2.6-0.1_rc2
 - Update to 2.6rc2
 
