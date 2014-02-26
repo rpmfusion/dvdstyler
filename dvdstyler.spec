@@ -2,8 +2,8 @@
 
 Name:           dvdstyler
 Epoch:          1
-Version:        2.6.1
-Release:        2%{?prerel}%{?dist}
+Version:        2.7
+Release:        1%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -58,7 +58,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
-chmod +x ./autogen.sh ./configure
+rm -f install-sh depcomp missing mkinstalldirs
 ./autogen.sh
 %configure \
   --disable-dependency-tracking
@@ -90,6 +90,17 @@ desktop-file-install --vendor rpmfusion \
 %{_mandir}/*/*.gz
 
 %changelog
+* Tue Feb 25 2014 Sérgio Basto <sergio@serjux.com> - 1:2.7-1
+- Update to 2.7 
+  * better support of multiple titlesets 
+  * added a possibility to add a chapter selection menu 
+  * added the rectangle selection tool 
+  * added possibility to align multiple buttons to left/right/top/bottom 
+  * added slide properties dialog 
+  * added a possibility to select a titleset to import from DVD 
+  * changed to use mplex tool for menu multiplexing 
+  * updated ffmpeg to version 2.1.3
+
 * Sat Jan 04 2014 Sérgio Basto <sergio@serjux.com> - 1:2.6.1-2
 - New upstream source. 
 
