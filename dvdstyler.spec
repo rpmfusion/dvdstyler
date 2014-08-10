@@ -1,9 +1,9 @@
-#global prerel rc1
+#global prerel rc3
 
 Name:           dvdstyler
 Epoch:          1
-Version:        2.5
-Release:        1%{?prerel}%{?dist}
+Version:        2.7.2
+Release:        4%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -16,7 +16,7 @@ BuildRequires:  automake autoconf
 BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
-BuildRequires:  wxGTK-devel >= 2.6.3
+BuildRequires:  wxGTK-devel >= 2.8.7
 BuildRequires:  wxsvg-devel >= 1.1.14
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
@@ -58,7 +58,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 %{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
-chmod +x ./autogen.sh ./configure
+rm -f install-sh depcomp missing mkinstalldirs
 ./autogen.sh
 %configure \
   --disable-dependency-tracking
@@ -90,6 +90,61 @@ desktop-file-install --vendor rpmfusion \
 %{_mandir}/*/*.gz
 
 %changelog
+* Sun Aug 10 2014 Sérgio Basto <sergio@serjux.com> - 1:2.7.2-4
+- Rebuild for new wxsvg
+
+* Thu Aug 07 2014 Sérgio Basto <sergio@serjux.com> - 1:2.7.2-3
+- Rebuilt for ffmpeg-2.3
+
+* Mon May 12 2014 Sérgio Basto <sergio@serjux.com> - 1:2.7.2-2
+- Rebuild for new wxsvg
+
+* Tue Apr 08 2014 Sérgio Basto <sergio@serjux.com> - 1:2.7.2-1
+- New upstream release. 
+  * fixed some small bugs
+  * win32: updated ffmpeg to current snapshot version
+
+* Sat Mar 29 2014 Sérgio Basto <sergio@serjux.com> - 1:2.7.1-2
+- Rebuilt for ffmpeg-2.2
+
+* Fri Mar 14 2014 Sérgio Basto <sergio@serjux.com> - 1:2.7.1-1
+- New upstream release
+
+* Tue Feb 25 2014 Sérgio Basto <sergio@serjux.com> - 1:2.7-1
+- Update to 2.7 
+  * better support of multiple titlesets 
+  * added a possibility to add a chapter selection menu 
+  * added the rectangle selection tool 
+  * added possibility to align multiple buttons to left/right/top/bottom 
+  * added slide properties dialog 
+  * added a possibility to select a titleset to import from DVD 
+  * changed to use mplex tool for menu multiplexing 
+  * updated ffmpeg to version 2.1.3
+
+* Sat Jan 04 2014 Sérgio Basto <sergio@serjux.com> - 1:2.6.1-2
+- New upstream source. 
+
+* Wed Dec 04 2013 Sérgio Basto <sergio@serjux.com> - 1:2.6.1-1
+- New upstream release.
+
+* Thu Nov 14 2013 Sérgio Basto <sergio@serjux.com> - 2.6-1
+- Update to 2.6 final version.
+
+* Sat Oct 26 2013 Sérgio Basto <sergio@serjux.com> - 2.6-0.1_rc2
+- Update to 2.6rc2
+
+* Sun Oct 20 2013 Sérgio Basto <sergio@serjux.com> - 2.5.2-2
+- Rebuilt for wxsvg-1.2.1
+
+* Mon Oct 07 2013 Sérgio Basto <sergio@serjux.com> - 2.5.2-1
+- Update to 2.5.2
+
+* Mon Sep 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 1:2.5-3
+- Rebuilt
+
+* Thu Aug 15 2013 Nicolas Chauvet <kwizart@gmail.com> - 1:2.5-2
+- Rebuilt for FFmpeg 2.0.x
+
 * Sun Jul 14 2013 Sérgio Basto <sergio@serjux.com> - 2.5-1
 - New upstream release.
 
