@@ -2,7 +2,7 @@
 
 Name:           dvdstyler
 Epoch:          1
-Version:        2.9.4
+Version:        2.9.6
 Release:        1%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
@@ -90,6 +90,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Wed Jan 06 2016 Sérgio Basto <sergio@serjux.com> - 1:2.9.6-1
+- Update to 2.9.6
+
 * Tue Oct 27 2015 Sérgio Basto <sergio@serjux.com> - 1:2.9.4-1
 - Update to 2.9.4
 - Drop vender tag
