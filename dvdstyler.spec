@@ -3,7 +3,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        2.9.6
-Release:        1%{?prerel}%{?dist}
+Release:        2%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -81,8 +81,8 @@ desktop-file-install \
 
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING README TODO
+%doc AUTHORS ChangeLog README TODO
+%license COPYING
 %{_bindir}/%{name}
 %{_datadir}/%{name}/
 %{_datadir}/applications/*%{name}.desktop
@@ -90,6 +90,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Thu Jan 07 2016 Sérgio Basto <sergio@serjux.com> - 1:2.9.6-2
+- Add license tag and minor clean up
+
 * Wed Jan 06 2016 Sérgio Basto <sergio@serjux.com> - 1:2.9.6-1
 - Update to 2.9.6
 
