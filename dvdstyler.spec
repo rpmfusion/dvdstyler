@@ -3,7 +3,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        2.9.6
-Release:        2%{?prerel}%{?dist}
+Release:        3%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -90,6 +90,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Sat Jul 30 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1:2.9.6-3
+- Rebuilt for ffmpeg-3.1.1
+
 * Thu Jan 07 2016 Sérgio Basto <sergio@serjux.com> - 1:2.9.6-2
 - Add license tag and minor clean up
 
