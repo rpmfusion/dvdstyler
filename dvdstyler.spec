@@ -3,7 +3,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        2.9.6
-Release:        3%{?prerel}%{?dist}
+Release:        4%{?prerel}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -39,7 +39,6 @@ Requires:       dvd+rw-tools
 Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       mkisofs
-Requires:       mpgtx
 Requires:       wxsvg >= 1.1.14
 # note: do not add Require: totem-backend or another DVD player - see
 # RPM Fusion bug 366 for more details
@@ -56,7 +55,6 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 %build
 rm -f install-sh depcomp missing mkinstalldirs compile config.guess config.sub install-sh
-
 touch NEWS
 #./autogen.sh
 autoreconf -i
@@ -68,20 +66,21 @@ make %{?_smp_mflags}
 
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=%{buildroot}
 
-rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/dvdstyler
+# License docs go to another place
+rm -rf %{buildroot}%{_docdir}/%{name}/COPYING
 
 desktop-file-install \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications \
+  --dir %{buildroot}%{_datadir}/applications \
   --delete-original \
-  $RPM_BUILD_ROOT%{_datadir}/applications/%{name}.desktop
+  %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 %find_lang %{name}
 
 
 %files -f %{name}.lang
-%doc AUTHORS ChangeLog README TODO
+%{_docdir}/%{name}
 %license COPYING
 %{_bindir}/%{name}
 %{_datadir}/%{name}/
@@ -90,6 +89,11 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Sun Jul 31 2016 Sérgio Basto <sergio@serjux.com> - 1:2.9.6-4
+- mpgtx is not required since 2008 !
+- Use %%{buildroot} instead $RPM_BUILD_ROOT 
+- Pack all documentation 
+
 * Sat Jul 30 2016 Julian Sikorski <belegdol@fedoraproject.org> - 1:2.9.6-3
 - Rebuilt for ffmpeg-3.1.1
 
