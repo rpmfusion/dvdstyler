@@ -4,7 +4,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        3.0.2
-Release:        0.1%{?prerel_real}%{?dist}
+Release:        0.2%{?prerel_real}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -22,7 +22,7 @@ BuildRequires:  wxGTK3-devel >= 2.8.7
 BuildRequires:  wxsvg-devel >= 1.5.9
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
-BuildRequires:  libgnomeui-devel
+#BuildRequires:  libgnomeui-devel
 # mpeg
 BuildRequires:  dvdauthor
 # iso/burn
@@ -94,6 +94,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Tue Aug 16 2016 Sérgio Basto <sergio@serjux.com> - 1:3.0.2-0.2.beta3
+- Remove BR:libgnomeui-devel
+
 * Tue Aug 16 2016 Sérgio Basto <sergio@serjux.com> - 1:3.0.2-0.1.beta3
 - Update DVDStyler to 3.0.2beta3
 
