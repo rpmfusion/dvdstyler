@@ -1,22 +1,25 @@
-#global prerel rc3
+%global prerel_real .beta3
+%global prerel b2
 
 Name:           dvdstyler
 Epoch:          1
-Version:        2.9.6
-Release:        4%{?prerel}%{?dist}
+Version:        3.0.2
+Release:        0.1%{?prerel_real}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
+Patch1:         3.0.2b3.patch
 # build
 BuildRequires:  automake autoconf
 BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
-BuildRequires:  wxGTK-devel >= 2.8.7
-BuildRequires:  wxsvg-devel >= 1.1.14
+BuildRequires:  wxGTK3-devel >= 2.8.7
+# wxsvg version with wxGTK3
+BuildRequires:  wxsvg-devel >= 1.5.9
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
 BuildRequires:  libgnomeui-devel
@@ -39,7 +42,8 @@ Requires:       dvd+rw-tools
 Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       mkisofs
-Requires:       wxsvg >= 1.1.14
+# wxsvg version with wxGTK3
+Requires:       wxsvg >= 1.5.9-2
 # note: do not add Require: totem-backend or another DVD player - see
 # RPM Fusion bug 366 for more details
 
@@ -51,6 +55,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 %prep
 %setup -q -n DVDStyler-%{version}%{?prerel}
+%patch1 -p1 -b beta3
 #{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
@@ -59,7 +64,7 @@ touch NEWS
 #./autogen.sh
 autoreconf -i
 %configure \
-  --disable-dependency-tracking
+  --disable-dependency-tracking --with-wx-config=/usr/bin/wx-config-3.0
 # docs folder is not smp_mflags safe
 make -C docs
 make %{?_smp_mflags}
@@ -89,6 +94,12 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Tue Aug 16 2016 Sérgio Basto <sergio@serjux.com> - 1:3.0.2-0.1.beta3
+- Update DVDStyler to 3.0.2beta3
+
+* Mon Aug 15 2016 Sérgio Basto <sergio@serjux.com> - 1:2.9.6-5
+- Upstream suggested to use wxGTK 3.x.
+
 * Sun Jul 31 2016 Sérgio Basto <sergio@serjux.com> - 1:2.9.6-4
 - mpgtx is not required since 2008 !
 - Use %%{buildroot} instead $RPM_BUILD_ROOT 
