@@ -4,21 +4,22 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        3.0.2
-Release:        2%{?prerel_real}%{?dist}
+Release:        3%{?prerel_real}%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
+Patch1:         dvdstyler-wxwin.m4.patch
 # build
 BuildRequires:  automake autoconf
 BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
-BuildRequires:  wxGTK3-devel >= 2.8.7
+BuildRequires:  compat-wxGTK3-gtk2-devel >= 2.8.7
 # wxsvg version with wxGTK3
-BuildRequires:  wxsvg-devel >= 1.5.9-2
+BuildRequires:  wxsvg-devel >= 1.5.9-4
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
 #BuildRequires:  libgnomeui-devel
@@ -42,7 +43,7 @@ Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       mkisofs
 # wxsvg version with wxGTK3
-Requires:       wxsvg >= 1.5.9-2
+Requires:       wxsvg >= 1.5.9-4
 # note: do not add Require: totem-backend or another DVD player - see
 # RPM Fusion bug 366 for more details
 
@@ -54,6 +55,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 %prep
 %setup -q -n DVDStyler-%{version}%{?prerel}
+%patch1 -p1
 #{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
@@ -62,7 +64,7 @@ touch NEWS
 #./autogen.sh
 autoreconf -i
 %configure \
-  --disable-dependency-tracking --with-wx-config=/usr/bin/wx-config-3.0
+  --disable-dependency-tracking --with-wx-config=/usr/bin/wx-config-3.0-gtk2
 # docs folder is not smp_mflags safe
 make -C docs
 %make_build
@@ -92,6 +94,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Tue Sep 27 2016 Sérgio Basto <sergio@serjux.com> - 1:3.0.2-3
+- Let try compat-wxGTK3-gtk2, rfbz#4267
+
 * Wed Sep 21 2016 Sérgio Basto <sergio@serjux.com> - 1:3.0.2-2
 - Be sure that compiles with wxsvg-devel-1.5.9-2
 
