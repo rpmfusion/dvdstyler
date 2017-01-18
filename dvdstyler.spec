@@ -3,8 +3,8 @@
 
 Name:           dvdstyler
 Epoch:          1
-Version:        3.0.2
-Release:        3%{?prerel_real}%{?dist}
+Version:        3.0.3
+Release:        1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -19,7 +19,7 @@ BuildRequires:  byacc
 # libraries
 BuildRequires:  compat-wxGTK3-gtk2-devel >= 2.8.7
 # wxsvg version with wxGTK3
-BuildRequires:  wxsvg-devel >= 1.5.9-4
+BuildRequires:  wxsvg-devel >= 1.5.11
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
 #BuildRequires:  libgnomeui-devel
@@ -94,6 +94,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Wed Jan 18 2017 Sérgio Basto <sergio@serjux.com> - 1:3.0.3-1
+- Update dvdstyler to 3.0.3
+
 * Tue Sep 27 2016 Sérgio Basto <sergio@serjux.com> - 1:3.0.2-3
 - Let try compat-wxGTK3-gtk2, rfbz#4267
 
