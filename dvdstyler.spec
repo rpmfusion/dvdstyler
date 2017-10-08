@@ -4,7 +4,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        3.0.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -19,7 +19,7 @@ BuildRequires:  byacc
 # libraries
 BuildRequires:  compat-wxGTK3-gtk2-devel >= 2.8.7
 # wxsvg version with wxGTK3
-BuildRequires:  wxsvg-devel >= 1.5.11
+BuildRequires:  wxsvg-devel >= 1.5.12
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
 #BuildRequires:  libgnomeui-devel
@@ -43,7 +43,7 @@ Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       mkisofs
 # wxsvg version with wxGTK3
-Requires:       wxsvg >= 1.5.9-4
+Requires:       wxsvg >= 1.5.12
 # note: do not add Require: totem-backend or another DVD player - see
 # RPM Fusion bug 366 for more details
 
@@ -64,7 +64,11 @@ touch NEWS
 #./autogen.sh
 autoreconf -i
 %configure \
-  --disable-dependency-tracking --with-wx-config=/usr/bin/wx-config-3.0-gtk2
+  --disable-dependency-tracking \
+  %if (0%{?fedora} && 0%{?fedora} < 28)
+  --with-wx-config=/usr/bin/wx-config-3.0-gtk2 \
+  %endif
+
 # docs folder is not smp_mflags safe
 make -C docs
 %make_build
@@ -94,6 +98,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Sun Oct 08 2017 Sérgio Basto <sergio@serjux.com> - 1:3.0.3-5
+- Fix build on f28+ for compat-wxGTK3-gtk2-devel
+
 * Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1:3.0.3-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
