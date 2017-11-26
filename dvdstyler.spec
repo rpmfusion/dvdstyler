@@ -1,10 +1,11 @@
 #global prerel_real .beta3
 #global prerel b2
+%global wxsvg_ver 1.5.12
 
 Name:           dvdstyler
 Epoch:          1
-Version:        3.0.3
-Release:        6%{?dist}
+Version:        3.0.4
+Release:        1%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -17,9 +18,9 @@ BuildRequires:  automake autoconf
 BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
-BuildRequires:  compat-wxGTK3-gtk2-devel >= 2.8.7
+BuildRequires:  compat-wxGTK3-gtk2-devel >= 3.0
 # wxsvg version with wxGTK3
-BuildRequires:  wxsvg-devel >= 1.5.12
+BuildRequires:  wxsvg-devel >= %{wxsvg_ver}
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
 #BuildRequires:  libgnomeui-devel
@@ -43,7 +44,7 @@ Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       mkisofs
 # wxsvg version with wxGTK3
-Requires:       wxsvg >= 1.5.12
+Requires:       wxsvg >= %{wxsvg_ver}
 # note: do not add Require: totem-backend or another DVD player - see
 # RPM Fusion bug 366 for more details
 
@@ -60,9 +61,13 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 %build
 rm -f install-sh depcomp missing mkinstalldirs compile config.guess config.sub install-sh
+rm -f aclocal.m4 Makefile.in
+#rm -f m4_ax_cxx_compile_stdcxx.m4 m4_ax_cxx_compile_stdcxx.m4 wxwin.m4
 touch NEWS
 #./autogen.sh
+sed -i 's/WX_CONFIG_CHECK.\[3.0\]/WX_CONFIG_CHECK([3.0.0]/' configure.ac
 autoreconf -i
+#sed -i 's/min_wx_version=3.0/min_wx_version=3.0.0/' configure
 %configure \
   --disable-dependency-tracking \
   %if (0%{?fedora} && 0%{?fedora} < 28)
@@ -98,6 +103,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Sun Nov 26 2017 Sérgio Basto <sergio@serjux.com> - 1:3.0.4-1
+- Update to 3.0.4
+
 * Tue Oct 17 2017 Leigh Scott <leigh123linux@googlemail.com> - 1:3.0.3-6
 - Rebuild for ffmpeg update
 
