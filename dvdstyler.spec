@@ -5,7 +5,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        3.0.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -103,6 +103,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Thu Jan 18 2018 Leigh Scott <leigh123linux@googlemail.com> - 1:3.0.4-2
+- Rebuilt for ffmpeg-3.5 git
+
 * Sun Nov 26 2017 Sérgio Basto <sergio@serjux.com> - 1:3.0.4-1
 - Update to 3.0.4
 
