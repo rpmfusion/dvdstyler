@@ -13,6 +13,7 @@ License:        GPLv2+
 URL:            http://www.dvdstyler.de/
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
 Patch1:         dvdstyler-wxwin.m4.patch
+Patch2:         ffmpeg35_buildfix.patch
 # build
 BuildRequires:  automake autoconf
 BuildRequires:  gettext
@@ -57,6 +58,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 %prep
 %setup -q -n DVDStyler-%{version}%{?prerel}
 %patch1 -p1
+%patch2 -p1
 #{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 %build
