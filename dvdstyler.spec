@@ -5,7 +5,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        3.0.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -105,6 +105,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Thu Mar 08 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 1:3.0.4-4
+- Rebuilt for new ffmpeg snapshot
+
 * Wed Feb 28 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 1:3.0.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
