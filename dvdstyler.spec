@@ -29,7 +29,7 @@ BuildRequires:  ffmpeg
 BuildRequires:  dvdauthor
 # iso/burn
 BuildRequires:  pkgconfig(libudev)
-BuildRequires:  mkisofs
+BuildRequires:  genisoimage
 BuildRequires:  dvd+rw-tools
 #images
 BuildRequires:  libjpeg-devel
@@ -43,7 +43,7 @@ BuildRequires:  desktop-file-utils
 Requires:       dvd+rw-tools
 Requires:       dvdauthor
 Requires:       mjpegtools
-Requires:       mkisofs
+Requires:       genisoimage
 # wxsvg version with wxGTK3
 Requires:       wxsvg >= %{wxsvg_ver}
 # note: do not add Require: totem-backend or another DVD player - see
