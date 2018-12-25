@@ -1,11 +1,11 @@
 #global prerel_real .beta3
 #global prerel b2
-%global wxsvg_ver 1.5.12
+%global wxsvg_ver 1.5.15
 
 Name:           dvdstyler
 Epoch:          1
 Version:        3.0.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Cross-platform DVD authoring application
 
 Group:          Applications/Multimedia
@@ -16,10 +16,11 @@ Patch1:         dvdstyler-wxwin.m4.patch
 Patch2:         ffmpeg35_buildfix.patch
 # build
 BuildRequires:  automake autoconf
+BuildRequires:  gcc-c++
 BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
-BuildRequires:  compat-wxGTK3-gtk2-devel >= 3.0
+BuildRequires:  wxGTK3-devel >= 3.0
 # wxsvg version with wxGTK3
 BuildRequires:  wxsvg-devel >= %{wxsvg_ver}
 BuildRequires:  ffmpeg-devel
@@ -44,6 +45,7 @@ Requires:       dvd+rw-tools
 Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       genisoimage
+Requires:       dvdisaster
 # wxsvg version with wxGTK3
 Requires:       wxsvg >= %{wxsvg_ver}
 # note: do not add Require: totem-backend or another DVD player - see
@@ -57,7 +59,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 %prep
 %setup -q -n DVDStyler-%{version}%{?prerel}
-%patch1 -p1
+#patch1 -p1
 %patch2 -p1
 #{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
@@ -65,16 +67,16 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 rm -f install-sh depcomp missing mkinstalldirs compile config.guess config.sub install-sh
 rm -f aclocal.m4 Makefile.in
 #rm -f m4_ax_cxx_compile_stdcxx.m4 m4_ax_cxx_compile_stdcxx.m4 wxwin.m4
-touch NEWS
-#./autogen.sh
-sed -i 's/WX_CONFIG_CHECK.\[3.0\]/WX_CONFIG_CHECK([3.0.0]/' configure.ac
-autoreconf -i
+#touch NEWS
+./autogen.sh
+#sed -i 's/WX_CONFIG_CHECK.\[3.0\]/WX_CONFIG_CHECK([3.0.0]/' configure.ac
+#autoreconf -i
 #sed -i 's/min_wx_version=3.0/min_wx_version=3.0.0/' configure
 %configure \
   --disable-dependency-tracking \
-  %if (0%{?fedora} && 0%{?fedora} < 28)
-  --with-wx-config=/usr/bin/wx-config-3.0-gtk2 \
-  %endif
+#  %if (0%{?fedora} && 0%{?fedora} < 28)
+#  --with-wx-config=/usr/bin/wx-config-3.0-gtk2 \
+#  %endif
 
 # docs folder is not smp_mflags safe
 make -C docs
@@ -105,6 +107,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Tue Dec 25 2018 Sérgio Basto <sergio@serjux.com> - 1:3.0.4-6
+- Move to wxGTK3 as request in rfbz#5068
+
 * Thu Jul 26 2018 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1:3.0.4-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
