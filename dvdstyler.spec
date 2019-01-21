@@ -1,17 +1,37 @@
-#global prerel_real .beta3
-#global prerel b2
-%global wxsvg_ver 1.5.15
+#For git snapshots, set to 0 to use release instead:
+%global usesnapshot 1
+%if 0%{?usesnapshot}
+%global commit0 e4c6466ec3ca26af550082a97d24c001e2780239
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+%global snapshottag .git%{shortcommit0}
+%endif
+
+%global prerel_real .beta3
+%global prerel b2
+%global wxsvg_ver 1.5.12
 
 Name:           dvdstyler
 Epoch:          1
-Version:        3.0.4
-Release:        6%{?dist}
+Version:        3.1
+Release:        1.beta3%{?snapshottag}%{?dist}
 Summary:        Cross-platform DVD authoring application
-
-Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
-Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
+
+# checkout instructions
+# git clone git://git.code.sf.net/p/dvdstyler/DVDStyler dvdstyler
+# cd dvdstyler
+# git rev-parse --short HEAD
+# git archive --format=tar --prefix=dvdshortcommit0/ %%{shortcommit0} \
+#   -o dvdstyler-%%{shortcommit0}.tar
+# bzip2 dvdstyler-%%{shortcommit0}.tar
+
+%if 0%{?usesnapshot}
+Source0:        %{name}-%{shortcommit0}.tar.bz2
+%else
+Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%%{version}%{?prerel}.tar.bz2
+%endif
+
 Patch1:         dvdstyler-wxwin.m4.patch
 Patch2:         ffmpeg35_buildfix.patch
 # build
@@ -45,7 +65,6 @@ Requires:       dvd+rw-tools
 Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       genisoimage
-Requires:       dvdisaster
 # wxsvg version with wxGTK3
 Requires:       wxsvg >= %{wxsvg_ver}
 # note: do not add Require: totem-backend or another DVD player - see
@@ -58,10 +77,14 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 
 %prep
-%setup -q -n DVDStyler-%{version}%{?prerel}
-#patch1 -p1
-%patch2 -p1
+#%setup -q -n DVDStyler-%{version}%{?prerel}
+%setup -q -n %{name}
+%patch1 -p1
+#%patch2 -p1
 #{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
+
+# fixes E: script-without-shebang
+chmod a-x src/*.{h,cpp}
 
 %build
 rm -f install-sh depcomp missing mkinstalldirs compile config.guess config.sub install-sh
@@ -107,6 +130,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Sun Jan 20 2019 Martin Gansser <martinkg@fedoraproject.org> - 1:3.1-1.beta3.gite4c6466
+- Update to 1:3.1-1.beta3.gite4c6466
+
 * Tue Dec 25 2018 Sérgio Basto <sergio@serjux.com> - 1:3.0.4-6
 - Move to wxGTK3 as request in rfbz#5068
 
