@@ -8,12 +8,12 @@
 
 %global prerel_real .beta3
 %global prerel b2
-%global wxsvg_ver 1.5.15
+%global wxsvg_ver 1.5.16
 
 Name:           dvdstyler
 Epoch:          1
 Version:        3.1
-Release:        2.beta3%{?snapshottag}%{?dist}
+Release:        3.beta3%{?snapshottag}%{?dist}
 Summary:        Cross-platform DVD authoring application
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
@@ -22,7 +22,7 @@ URL:            http://www.dvdstyler.de/
 # git clone git://git.code.sf.net/p/dvdstyler/DVDStyler dvdstyler
 # cd dvdstyler
 # git rev-parse --short HEAD
-# git archive --format=tar --prefix=dvdshortcommit0/ %%{shortcommit0} \
+# git archive --format=tar --prefix=dvdstyler/ %%{shortcommit0} \
 #   -o dvdstyler-%%{shortcommit0}.tar
 # bzip2 dvdstyler-%%{shortcommit0}.tar
 
@@ -130,6 +130,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Mon Jan 28 2019 Martin Gansser <martinkg@fedoraproject.org> - 1:3.1-3.beta3.gite4c6466
+- Rebuilt for wxsvg-1.5.16
+
 * Tue Jan 22 2019 Martin Gansser <martinkg@fedoraproject.org> - 1:3.1-2.beta3.gite4c6466
 - Update wxsvg_ver 1.5.15
 
