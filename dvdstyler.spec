@@ -13,7 +13,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        3.1
-Release:        3.beta3%{?snapshottag}%{?dist}
+Release:        4.beta3%{?snapshottag}%{?dist}
 Summary:        Cross-platform DVD authoring application
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
@@ -130,6 +130,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Mon Mar 04 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1:3.1-4.beta3.gite4c6466
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Mon Jan 28 2019 Martin Gansser <martinkg@fedoraproject.org> - 1:3.1-3.beta3.gite4c6466
 - Rebuilt for wxsvg-1.5.16
 
