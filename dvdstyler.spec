@@ -1,7 +1,7 @@
 #For git snapshots, set to 0 to use release instead:
 %global usesnapshot 1
 %if 0%{?usesnapshot}
-%global commit0 e4968db20deddc33ada0779853ab19e4d1570b0c
+%global commit0 1c9ce4ca75ca5819e50f0728beb0b65959821940
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global snapshottag .git%{shortcommit0}
 %endif
@@ -13,7 +13,7 @@
 Name:           dvdstyler
 Epoch:          1
 Version:        3.1
-Release:        5.beta3%{?snapshottag}%{?dist}
+Release:        6.beta3%{?snapshottag}%{?dist}
 Summary:        Cross-platform DVD authoring application
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
@@ -132,6 +132,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Tue Apr 16 2019 Martin Gansser <martinkg@fedoraproject.org> - 1:3.1-6.beta3.git1c9ce4c
+- Update to 1:3.1-6.beta3.git1c9ce4c
+
 * Fri Apr 12 2019 Martin Gansser <martinkg@fedoraproject.org> - 1:3.1-5.beta3.gite4968db
 - Update to 1:3.1-5.beta3.gite4968db
 
