@@ -1,5 +1,5 @@
 #For git snapshots, set to 0 to use release instead:
-%global usesnapshot 1
+%global usesnapshot 0
 %if 0%{?usesnapshot}
 %global commit0 1c9ce4ca75ca5819e50f0728beb0b65959821940
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
@@ -8,12 +8,16 @@
 
 %global prerel_real .beta3
 %global prerel b2
-%global wxsvg_ver 1.5.16
+%global wxsvg_ver 1.5.17
 
 Name:           dvdstyler
-Epoch:          1
+Epoch:          2
 Version:        3.1
-Release:        6.beta3%{?snapshottag}%{?dist}
+%if 0%{?usesnapshot}
+Release:        6.beta4%{?snapshottag}%{?dist}
+%else
+Release:        1%{?dist}
+%endif
 Summary:        Cross-platform DVD authoring application
 License:        GPLv2+
 URL:            http://www.dvdstyler.de/
@@ -31,7 +35,7 @@ URL:            http://www.dvdstyler.de/
 %if 0%{?usesnapshot}
 Source0:        %{name}-%{shortcommit0}.tar.bz2
 %else
-Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%%{version}%{?prerel}.tar.bz2
+Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 %endif
 
 Patch1:         dvdstyler-wxwin.m4.patch
@@ -79,8 +83,11 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 
 %prep
-#%setup -q -n DVDStyler-%{version}%{?prerel}
+%if 0%{?usesnapshot}
 %setup -q -n %{name}
+%else
+%setup -q -n DVDStyler-%{version}
+%endif
 %patch1 -p1
 #%patch2 -p1
 #{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
@@ -132,8 +139,12 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
-* Tue Apr 16 2019 Martin Gansser <martinkg@fedoraproject.org> - 1:3.1-6.beta3.git1c9ce4c
-- Update to 1:3.1-6.beta3.git1c9ce4c
+* Mon May 27 2019 Martin Gansser <martinkg@fedoraproject.org> - 2:3.1-1
+- Update to 2:3.1
+- Add epoch to allow update
+
+* Tue Apr 16 2019 Martin Gansser <martinkg@fedoraproject.org> - 1:3.1-6.beta4.git1c9ce4c
+- Update to 1:3.1-6.beta4.git1c9ce4c
 
 * Fri Apr 12 2019 Martin Gansser <martinkg@fedoraproject.org> - 1:3.1-5.beta3.gite4968db
 - Update to 1:3.1-5.beta3.gite4968db
