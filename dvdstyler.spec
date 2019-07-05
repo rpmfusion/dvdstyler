@@ -8,11 +8,11 @@
 
 %global prerel_real .beta3
 %global prerel b2
-%global wxsvg_ver 1.5.17
+%global wxsvg_ver 1.5.19
 
 Name:           dvdstyler
 Epoch:          2
-Version:        3.1
+Version:        3.1.1
 %if 0%{?usesnapshot}
 Release:        6.beta4%{?snapshottag}%{?dist}
 %else
@@ -139,6 +139,9 @@ desktop-file-install \
 %{_mandir}/*/*.gz
 
 %changelog
+* Fri Jul 05 2019 Sérgio Basto <sergio@serjux.com> - 2:3.1.1-1
+- Update to 3.1.1
+
 * Mon May 27 2019 Martin Gansser <martinkg@fedoraproject.org> - 2:3.1-1
 - Update to 2:3.1
 - Add epoch to allow update
