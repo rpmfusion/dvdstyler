@@ -39,7 +39,6 @@ Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.
 %endif
 Source2:        %{name}.appdata.xml
 
-Patch1:         dvdstyler-wxwin.m4.patch
 # build
 BuildRequires:  automake
 BuildRequires:  autoconf
