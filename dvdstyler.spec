@@ -14,9 +14,9 @@ Name:           dvdstyler
 Epoch:          2
 Version:        3.1.2
 %if 0%{?usesnapshot}
-Release:        9.beta4%{?snapshottag}%{?dist}
+Release:        10.beta4%{?snapshottag}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 Summary:        Cross-platform DVD authoring application
 License:        GPLv2+
@@ -37,11 +37,12 @@ Source0:        %{name}-%{shortcommit0}.tar.bz2
 %else
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 %endif
+Source2:        %{name}.appdata.xml
 
 Patch1:         dvdstyler-wxwin.m4.patch
-Patch2:         ffmpeg35_buildfix.patch
 # build
-BuildRequires:  automake autoconf
+BuildRequires:  automake
+BuildRequires:  autoconf
 BuildRequires:  gcc-c++
 BuildRequires:  gettext
 BuildRequires:  byacc
@@ -51,7 +52,6 @@ BuildRequires:  wxGTK3-devel >= 3.0
 BuildRequires:  wxsvg-devel >= %{wxsvg_ver}
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
-#BuildRequires:  libgnomeui-devel
 # mpeg
 BuildRequires:  dvdauthor
 # iso/burn
@@ -88,8 +88,6 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 %else
 %setup -q -n DVDStyler-%{version}
 %endif
-%patch1 -p1
-#%patch2 -p1
 #{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 # fixes E: script-without-shebang
@@ -103,12 +101,8 @@ rm -f aclocal.m4 Makefile.in
 ./autogen.sh
 #sed -i 's/WX_CONFIG_CHECK.\[3.0\]/WX_CONFIG_CHECK([3.0.0]/' configure.ac
 #autoreconf -i
-#sed -i 's/min_wx_version=3.0/min_wx_version=3.0.0/' configure
 %configure \
   --disable-dependency-tracking \
-#  %if (0%{?fedora} && 0%{?fedora} < 28)
-#  --with-wx-config=/usr/bin/wx-config-3.0-gtk2 \
-#  %endif
 
 # docs folder is not smp_mflags safe
 make -C docs
@@ -128,6 +122,8 @@ desktop-file-install \
 
 %find_lang %{name}
 
+install -P -m 0644 -D %{SOURCE2} %{buildroot}%{_metainfodir}/%{name}.appdata.xml
+
 
 %files -f %{name}.lang
 %{_docdir}/%{name}
@@ -137,8 +133,14 @@ desktop-file-install \
 %{_datadir}/applications/*%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
 %{_mandir}/*/*.gz
+%{_metainfodir}/%{name}.appdata.xml
 
 %changelog
+* Sun Mar 01 2020 Sérgio Basto <sergio@serjux.com> - 2:3.1.2-4
+- Add appdata file, copied from
+  https://github.com/sanjayankur31/rpmfusion-appdata
+- Some cleanups, drop patch1, it was just for compat-wxGTK3-gtk2
+
 * Sat Feb 22 2020 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 2:3.1.2-3
 - Rebuild for ffmpeg-4.3 git
 
