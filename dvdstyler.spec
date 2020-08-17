@@ -14,9 +14,9 @@ Name:           dvdstyler
 Epoch:          2
 Version:        3.1.2
 %if 0%{?usesnapshot}
-Release:        10.beta4%{?snapshottag}%{?dist}
+Release:        11.beta4%{?snapshottag}%{?dist}
 %else
-Release:        4%{?dist}
+Release:        5%{?dist}
 %endif
 Summary:        Cross-platform DVD authoring application
 License:        GPLv2+
@@ -135,6 +135,9 @@ install -P -m 0644 -D %{SOURCE2} %{buildroot}%{_metainfodir}/%{name}.appdata.xml
 %{_metainfodir}/%{name}.appdata.xml
 
 %changelog
+* Mon Aug 17 2020 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 2:3.1.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Sun Mar 01 2020 Sérgio Basto <sergio@serjux.com> - 2:3.1.2-4
 - Add appdata file, copied from
   https://github.com/sanjayankur31/rpmfusion-appdata
