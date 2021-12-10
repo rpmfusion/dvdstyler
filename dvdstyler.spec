@@ -8,15 +8,15 @@
 
 %global prerel_real .beta3
 %global prerel b2
-%global wxsvg_ver 1.5.19
+%global wxsvg_ver 1.5.23-2
 
 Name:           dvdstyler
 Epoch:          2
-Version:        3.1.2
+Version:        3.2.1
 %if 0%{?usesnapshot}
-Release:        15.beta4%{?snapshottag}%{?dist}
+Release:        1%{?dist}
 %else
-Release:        9%{?dist}
+Release:        1%{?dist}
 %endif
 Summary:        Cross-platform DVD authoring application
 License:        GPLv2+
@@ -37,7 +37,7 @@ Source0:        %{name}-%{shortcommit0}.tar.bz2
 %else
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
 %endif
-Source2:        %{name}.appdata.xml
+Patch1:         fix.patch
 
 # build
 BuildRequires:  automake
@@ -46,7 +46,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
-BuildRequires:  wxGTK3-devel >= 3.0
+BuildRequires:  wxGTK-devel >= 3.1
 # wxsvg version with wxGTK3
 BuildRequires:  wxsvg-devel >= %{wxsvg_ver}
 BuildRequires:  ffmpeg-devel
@@ -87,6 +87,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 %else
 %setup -q -n DVDStyler-%{version}
 %endif
+%patch1 -p1
 #{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 # fixes E: script-without-shebang
@@ -121,7 +122,7 @@ desktop-file-install \
 
 %find_lang %{name}
 
-install -P -m 0644 -D %{SOURCE2} %{buildroot}%{_metainfodir}/%{name}.appdata.xml
+#install -m 0644 -D %{SOURCE2} %{buildroot}%{_metainfodir}/%{name}.appdata.xml
 
 
 %files -f %{name}.lang
@@ -135,6 +136,9 @@ install -P -m 0644 -D %{SOURCE2} %{buildroot}%{_metainfodir}/%{name}.appdata.xml
 %{_metainfodir}/%{name}.appdata.xml
 
 %changelog
+* Fri Dec 03 2021 Sérgio Basto <sergio@serjux.com> - 2:3.2.1-1
+- Update dvdstyler to 3.2.1
+
 * Thu Nov 11 2021 Leigh Scott <leigh123linux@gmail.com> - 2:3.1.2-9
 - Rebuilt for new ffmpeg snapshot
 
