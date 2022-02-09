@@ -14,9 +14,9 @@ Name:           dvdstyler
 Epoch:          2
 Version:        3.2.1
 %if 0%{?usesnapshot}
-Release:        1%{?dist}
+Release:        2%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 Summary:        Cross-platform DVD authoring application
 License:        GPLv2+
@@ -136,6 +136,9 @@ desktop-file-install \
 %{_metainfodir}/%{name}.appdata.xml
 
 %changelog
+* Wed Feb 09 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2:3.2.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Fri Dec 03 2021 Sérgio Basto <sergio@serjux.com> - 2:3.2.1-1
 - Update dvdstyler to 3.2.1
 
