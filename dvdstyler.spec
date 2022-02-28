@@ -51,6 +51,11 @@ BuildRequires:  wxGTK-devel >= 3.1
 BuildRequires:  wxsvg-devel >= %{wxsvg_ver}
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
+%if 0%{?fedora} && 0%{?fedora} > 35
+BuildRequires: compat-ffmpeg4-devel
+%else
+BuildRequires: ffmpeg-devel
+%endif
 # mpeg
 BuildRequires:  dvdauthor
 # iso/burn
@@ -94,6 +99,9 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 chmod a-x src/*.{h,cpp}
 
 %build
+%if 0%{?fedora} && 0%{?fedora} > 35
+export PKG_CONFIG_PATH="%{_libdir}/compat-ffmpeg4/pkgconfig"
+%endif
 rm -f install-sh depcomp missing mkinstalldirs compile config.guess config.sub install-sh
 rm -f aclocal.m4 Makefile.in
 #rm -f m4_ax_cxx_compile_stdcxx.m4 m4_ax_cxx_compile_stdcxx.m4 wxwin.m4
@@ -136,8 +144,9 @@ desktop-file-install \
 %{_metainfodir}/%{name}.appdata.xml
 
 %changelog
-* Wed Feb 09 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2:3.2.1-2
+* Mon Feb 28 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2:3.2.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+- Switch to compat-ffmpeg4
 
 * Fri Dec 03 2021 Sérgio Basto <sergio@serjux.com> - 2:3.2.1-1
 - Update dvdstyler to 3.2.1
