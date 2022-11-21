@@ -1,0 +1,12 @@
+diff --git a/src/mediaenc_ffmpeg.cpp b/src/mediaenc_ffmpeg.cpp
+index 29e1954..545cfa1 100644
+--- a/src/mediaenc_ffmpeg.cpp
++++ b/src/mediaenc_ffmpeg.cpp
+@@ -30,6 +30,7 @@ extern "C" {
+ #include <libswscale/swscale.h>
+ #include <libavutil/mathematics.h>
+ #include <libavutil/avstring.h>
++#include <libavutil/channel_layout.h>
+ #include <libavcodec/avcodec.h>
+ }
+ 

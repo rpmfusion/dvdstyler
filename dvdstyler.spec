@@ -37,6 +37,7 @@ Source0:        %{name}-%{shortcommit0}.zip
 %else
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
 %endif
+Patch0:         ffmpeg-5.0.patch
 
 # build
 BuildRequires:  automake
