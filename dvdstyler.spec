@@ -1,22 +1,22 @@
 #For git snapshots, set to 0 to use release instead:
 %global usesnapshot 0
 %if 0%{?usesnapshot}
-%global commit0 1c9ce4ca75ca5819e50f0728beb0b65959821940
+%global commit0 656fd8386d0a7f555ecbd25a97d21557ada70cd2
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global snapshottag .git%{shortcommit0}
 %endif
 
 %global prerel_real .beta3
-%global prerel b2
-%global wxsvg_ver 1.5.23-2
+%global prerel b3
+%global wxsvg_ver 1.5.24
 
 Name:           dvdstyler
 Epoch:          2
-Version:        3.2.1
+Version:        3.3
 %if 0%{?usesnapshot}
-Release:        3%{?dist}
+Release:        0.2%{?prerel_real}%{?snapshottag}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        0.1%{?prerel_real}%{?dist}
 %endif
 Summary:        Cross-platform DVD authoring application
 License:        GPLv2+
@@ -28,16 +28,15 @@ URL:            http://www.dvdstyler.de/
 # git clone https://git.code.sf.net/p/dvdstyler/DVDStyler dvdstyler
 # cd dvdstyler
 # git rev-parse --short HEAD
-# git archive --format=tar --prefix=dvdstyler/ %%{shortcommit0}
-#   -o dvdstyler-%%{shortcommit0}.tar
+# git archive --format=tar --prefix=dvdstyler-%%{shortcommit0}/
+#   -o ../dvdstyler-%%{shortcommit0}.tar HEAD
 # bzip2 dvdstyler-%%{shortcommit0}.tar
 
 %if 0%{?usesnapshot}
-Source0:        %{name}-%{shortcommit0}.tar.bz2
+Source0:        %{name}-%{shortcommit0}.zip
 %else
-Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}.tar.bz2
+Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
 %endif
-Patch1:         fix.patch
 
 # build
 BuildRequires:  automake
@@ -46,16 +45,12 @@ BuildRequires:  gcc-c++
 BuildRequires:  gettext
 BuildRequires:  byacc
 # libraries
-BuildRequires:  wxGTK-devel >= 3.1
+BuildRequires:  wxGTK-devel >= 3.0
 # wxsvg version with wxGTK3
 BuildRequires:  wxsvg-devel >= %{wxsvg_ver}
 BuildRequires:  ffmpeg-devel
 BuildRequires:  ffmpeg
-%if 0%{?fedora} && 0%{?fedora} > 35
-BuildRequires: compat-ffmpeg4-devel
-%else
 BuildRequires: ffmpeg-devel
-%endif
 # mpeg
 BuildRequires:  dvdauthor
 # iso/burn
@@ -75,7 +70,6 @@ Requires:       dvd+rw-tools
 Requires:       dvdauthor
 Requires:       mjpegtools
 Requires:       genisoimage
-# wxsvg version with wxGTK3
 Requires:       wxsvg >= %{wxsvg_ver}
 # note: do not add Require: totem-backend or another DVD player - see
 # RPM Fusion bug 366 for more details
@@ -88,20 +82,16 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 %prep
 %if 0%{?usesnapshot}
-%setup -q -n %{name}
+%autosetup -p1 -n dvdstyler-DVDStyler-%{commit0}
 %else
-%setup -q -n DVDStyler-%{version}
+%autosetup -p1 -n DVDStyler-%{version}%{?prerel}
 %endif
-%patch1 -p1
 #{__sed} -i 's|_T("xine \\"dvd:/$DIR\\"");|_T("totem \\"dvd://$DIR\\"");|' src/Config.h
 
 # fixes E: script-without-shebang
 chmod a-x src/*.{h,cpp}
 
 %build
-%if 0%{?fedora} && 0%{?fedora} > 35
-export PKG_CONFIG_PATH="%{_libdir}/compat-ffmpeg4/pkgconfig"
-%endif
 rm -f install-sh depcomp missing mkinstalldirs compile config.guess config.sub install-sh
 rm -f aclocal.m4 Makefile.in
 #rm -f m4_ax_cxx_compile_stdcxx.m4 m4_ax_cxx_compile_stdcxx.m4 wxwin.m4
@@ -144,6 +134,9 @@ desktop-file-install \
 %{_metainfodir}/%{name}.appdata.xml
 
 %changelog
+* Mon Nov 21 2022 Sérgio Basto <sergio@serjux.com> - 2:3.3-0.1.beta3
+- update to 3.3 beta3 , use ffmpeg 5.x
+
 * Sun Aug 07 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2:3.2.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
   5.1
