@@ -1,7 +1,7 @@
 #For git snapshots, set to 0 to use release instead:
-%global usesnapshot 0
+%global usesnapshot 1
 %if 0%{?usesnapshot}
-%global commit0 656fd8386d0a7f555ecbd25a97d21557ada70cd2
+%global commit0 26bf059ebdddad86cb207034ff6bb8e9713abf99
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global snapshottag .git%{shortcommit0}
 %endif
@@ -33,7 +33,7 @@ URL:            http://www.dvdstyler.de/
 # bzip2 dvdstyler-%%{shortcommit0}.tar
 
 %if 0%{?usesnapshot}
-Source0:        %{name}-%{shortcommit0}.zip
+Source0:        %{name}-%{shortcommit0}.tar.bz2
 %else
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
 %endif
@@ -83,7 +83,7 @@ create navigational DVD menus similar to those found on most commercial DVDs.
 
 %prep
 %if 0%{?usesnapshot}
-%autosetup -p1 -n dvdstyler-DVDStyler-%{commit0}
+%autosetup -p1 -n dvdstyler-%{shortcommit0}
 %else
 %autosetup -p1 -n DVDStyler-%{version}%{?prerel}
 %endif
@@ -135,6 +135,9 @@ desktop-file-install \
 %{_metainfodir}/%{name}.appdata.xml
 
 %changelog
+* Tue Dec 05 2023 Sérgio Basto <sergio@serjux.com> - 2:3.3-0.4.beta3.git26bf059
+- add the latest (3) commits of upstream, should fix rfbz #6510
+
 * Wed Aug 02 2023 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2:3.3-0.3.beta3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
 
