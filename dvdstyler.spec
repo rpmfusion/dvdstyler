@@ -1,13 +1,13 @@
 #For git snapshots, set to 0 to use release instead:
-%global usesnapshot 1
+%global usesnapshot 0
 %if 0%{?usesnapshot}
 %global commit0 26bf059ebdddad86cb207034ff6bb8e9713abf99
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global snapshottag .git%{shortcommit0}
 %endif
 
-%global prerel_real .beta3
-%global prerel b3
+%global prerel_real .beta4
+%global prerel b4
 %global wxsvg_ver 1.5.24
 
 Name:           dvdstyler
@@ -16,10 +16,10 @@ Version:        3.3
 %if 0%{?usesnapshot}
 Release:        0.6%{?prerel_real}%{?snapshottag}%{?dist}
 %else
-Release:        0.5%{?prerel_real}%{?dist}
+Release:        0.7%{?prerel_real}%{?dist}
 %endif
 Summary:        Cross-platform DVD authoring application
-License:        GPLv2+
+License:        GPL-2.0-or-later
 URL:            http://www.dvdstyler.de/
 
 # checkout instructions
@@ -37,7 +37,7 @@ Source0:        %{name}-%{shortcommit0}.tar.bz2
 %else
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
 %endif
-Patch0:         ffmpeg-5.0.patch
+#Patch0:         ffmpeg-5.0.patch
 
 # build
 BuildRequires:  automake
@@ -135,6 +135,10 @@ desktop-file-install \
 %{_metainfodir}/%{name}.appdata.xml
 
 %changelog
+* Mon Oct 14 2024 Martin Gansser <martinkg@fedoraproject.org> - 2:3.3-0.7.beta4
+- update to 3.3 beta4
+- Migrate to SPDX license
+
 * Thu Aug 01 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2:3.3-0.6.beta3.git26bf059
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
 
@@ -294,7 +298,6 @@ desktop-file-install \
 - Drop vender tag
 - Use autoreconf instead autogen.sh
 - Drop validation desktop patch
-
 
 * Thu Apr 09 2015 Sérgio Basto <sergio@serjux.com> - 1:2.9.2-1
 - Update to 2.9.2
