@@ -14,9 +14,9 @@ Name:           dvdstyler
 Epoch:          2
 Version:        3.3
 %if 0%{?usesnapshot}
-Release:        0.8%{?prerel_real}%{?snapshottag}%{?dist}
+Release:        0.9%{?prerel_real}%{?snapshottag}%{?dist}
 %else
-Release:        0.9%{?prerel_real}%{?dist}
+Release:        0.10%{?prerel_real}%{?dist}
 %endif
 Summary:        Cross-platform DVD authoring application
 License:        GPL-2.0-or-later
@@ -135,6 +135,9 @@ desktop-file-install \
 %{_metainfodir}/%{name}.appdata.xml
 
 %changelog
+* Wed Nov 05 2025 Leigh Scott <leigh123linux@gmail.com> - 2:3.3-0.10.beta4
+- Rebuild for ffmpeg-8.0
+
 * Sun Jul 27 2025 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 2:3.3-0.9.beta4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_43_Mass_Rebuild
 
