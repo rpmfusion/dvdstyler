@@ -37,7 +37,7 @@ Source0:        %{name}-%{shortcommit0}.tar.bz2
 %else
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
 %endif
-#Patch0:         ffmpeg-5.0.patch
+Patch0:         added-support-for-ffmpeg-8.0.patch
 
 # build
 BuildRequires:  automake
