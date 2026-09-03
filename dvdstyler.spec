@@ -38,6 +38,7 @@ Source0:        %{name}-%{shortcommit0}.tar.bz2
 Source0:        http://downloads.sourceforge.net/dvdstyler/DVDStyler-%{version}%{?prerel}.tar.bz2
 %endif
 Patch0:         added-support-for-ffmpeg-8.0.patch
+Patch1:         ffmpeg-9.patch
 
 # build
 BuildRequires:  automake
@@ -131,7 +132,7 @@ desktop-file-install \
 %{_datadir}/%{name}/
 %{_datadir}/applications/*%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
-%{_mandir}/*/*.gz
+%{_mandir}/*/*.*
 %{_metainfodir}/%{name}.appdata.xml
 
 %changelog
